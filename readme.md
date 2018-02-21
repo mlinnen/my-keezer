@@ -8,10 +8,9 @@ break the controller into multiple ESP8266's.  This project will evolve over a l
 goals have all been coded and work.
 
 ### Current list of goals
-* Measure the temperature inside the keezer with a single temperature sensor 
-* Control the keezer temperature given a low/high temp to turn off/on the compressor
+* Control the keezer temperature given a temperature set point and the temperature sensor reading
 * Turn on/off a LED when the compressor is on/off
-* LCD display the current temperature of the keezer
+* Display the current temperature of the keezer on an LCD
 * Broadcast current temperature readings via MQTT
 * Broadcast when the compressor turns on/off via MQTT
 * Set the temperature of the keezer via MQTT
@@ -19,14 +18,14 @@ goals have all been coded and work.
 * Turn on/off a fan to circulate the air in the keezer
 * Set the statistics of the beer in a keg via MQTT (Tap #, Name, Style, ABV, Date kegged)
 * Broadcast the statistics of the beer in each keg via MQTT (Tap #, Name, Style, ABV, Date kegged)
-* LCD display the statistics of the beer in each keg (Tap #. Name, Style, ABV, Date kegged)
+* Display the statistics of the beer in each keg (Tap #. Name, Style, ABV, Date kegged) on an LCD
 * Measure the beer flow to keep track of how much beer is left in the keg
 * Turn on an LED when the beer is close to empty in a keg
 * Broadcast the amount of beer in the keg via MQTT
-* LCD display the amount of beer left in the keg
+* Display the amount of beer left in the keg on an LCD
 * Measure the amount of Co2 in my tank
 * Turn on an LED when the Co2 is getting low
-* LCD display the amount of Co2 in my tank
+* Display the amount of Co2 in my tank on an LCD
 * Broadcast the amount of Co2 in my tank over MQTT
 * Display some of the keezer statistics on my Home Automation system.
 * Detect motion when someone approaches the keezer
