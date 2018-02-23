@@ -37,3 +37,9 @@ This is a list of actual features the current code base supports.  Eventually th
 * NONE - I am just getting started
 
 ## Hardware
+
+## Dependencies
+This application depends on the following libraries:
+* OneWire
+* DallasTemperature
+
