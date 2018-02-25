@@ -34,10 +34,9 @@ I have a number of goals I want to achieve for this custom controller.  At this 
 
 ## Features
 This is a list of actual features the current code base supports.  Eventually the goals listed above will turn into features here.
-* Measure the temperature inside the keezer with two temperature sensors (one at the top and one at the bottom)
 
 ### Current list of features
-* NONE - I am just getting started
+* Measure the temperature inside the keezer with two temperature sensors (one at the top and one at the bottom)
 
 ## Hardware
 
