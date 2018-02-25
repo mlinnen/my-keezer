@@ -9,7 +9,6 @@ before_install:
   - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
 install:
   - ln -s $PWD /usr/local/share/arduino/libraries/Adafruit_FONA
-  - arduino --install-library "RBD_Timer,OneWire,DallasTemperature"
   - git clone https://github.com/PaulStoffregen/OneWire /usr/local/share/arduino/libraries/OneWire
   - git clone https://github.com/milesburton/Arduino-Temperature-Control-Library /usr/local/share/arduino/libraries/DallasTemperature
   - arduino --install-boards esp8266:esp8266
