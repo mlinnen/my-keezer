@@ -13,6 +13,7 @@ class TemperatureSensor
     void setup();
     boolean loop();
     float topTemperature();
+    float averageTemperature();
     float bottomTemperature();
 
   private:

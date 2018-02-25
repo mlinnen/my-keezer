@@ -35,6 +35,13 @@ float TemperatureSensor::bottomTemperature()
   return _bottomTempearture;
 }
 
+float TemperatureSensor::averageTemperature()
+{
+  float sum = _bottomTempearture + _topTempearture;
+  if (sum==0) {return 0.0;}
+  return sum/2;
+}
+
 void TemperatureSensor::setup()
 {
   // Perform any onetime setup.

@@ -25,7 +25,7 @@ boolean TemperatureController::loop()
   // This is the service loop that is called from the main program and will update the state of this component.
   if (_tempSensor->loop() == true)
   {
-    _averageCurrentTemp = (_tempSensor->topTemperature() + _tempSensor->bottomTemperature()) / 2;
+    _averageCurrentTemp = _tempSensor->averageTemperature();
     Serial.print("Avg Temp ");
     Serial.print(_averageCurrentTemp, DEC);
     Serial.println();
