@@ -8,6 +8,8 @@ This is my custom controller for my keezer.  I am building this from the ground 
 I have a number of goals I want to achieve for this custom controller.  At this point I doubt all of this could or should be done on a single ESP8266 micro.  It is likely I will have a number of ESP8266's that work together over MQTT to achieve all of the functionality I want.  This project will evolve over a long period of time.  The following is a list of goals which I hope to eventually turn into actual features.
 
 ### Current list of goals
+* Control the keezer temperature given a temperature set point and the temperature sensor reading ()
+* Turn on/off an LED when the compressor is on/off
 * Display the current temperature of the keezer on an LCD
 * Broadcast current temperature readings via MQTT
 * Broadcast when the compressor turns on/off via MQTT
@@ -31,9 +33,7 @@ I have a number of goals I want to achieve for this custom controller.  At this 
 
 ## Features
 This is a list of actual features the current code base supports.  Eventually the goals listed above will turn into features here.
-* Control the keezer temperature given a temperature set point and the temperature sensor reading
 * Measure the temperature inside the keezer with two temperature sensors (one at the top and one at the bottom)
-* Turn on/off an LED when the compressor is on/off
 
 ### Current list of features
 * NONE - I am just getting started
