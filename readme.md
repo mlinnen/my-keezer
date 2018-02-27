@@ -1,18 +1,19 @@
 # Overview
 This is my custom controller for my keezer.  I am building this from the ground up because I have some very specific ideas that I want to include and I have found no other solution (custom or off the self) that meets my needs.
 
+## Build status
+Master Branch [![Build Status](https://travis-ci.org/mlinnen/my-keezer.svg?branch=master)](https://travis-ci.org/mlinnen/my-keezer) 
+Dev Branch [![Build Status](https://travis-ci.org/mlinnen/my-keezer.svg?branch=dev)](https://travis-ci.org/mlinnen/my-keezer)
 
 ## Goals 
 I have a number of goals I want to achieve for this custom controller.  At this point I doubt all of this could or should be done on a single ESP8266 micro.  It is likely I will have a number of ESP8266's that work together over MQTT to achieve all of the functionality I want.  This project will evolve over a long period of time.  The following is a list of goals which I hope to eventually turn into actual features.
 
 ### Current list of goals
-* Control the keezer temperature given a temperature set point and the temperature sensor reading
 * Turn on/off an LED when the compressor is on/off
 * Display the current temperature of the keezer on an LCD
 * Broadcast current temperature readings via MQTT
 * Broadcast when the compressor turns on/off via MQTT
 * Set the temperature of the keezer via MQTT
-* Measure the temperature inside the keezer with two temperature sensors (one at the top and one at the bottom)
 * Turn on/off a fan to circulate the air in the keezer
 * Set the statistics of the beer in a keg via MQTT (Tap #, Name, Style, ABV, Date kegged)
 * Broadcast the statistics of the beer in each keg via MQTT (Tap #, Name, Style, ABV, Date kegged)
@@ -31,9 +32,17 @@ I have a number of goals I want to achieve for this custom controller.  At this 
 * Alexa tell you about the beers on tap
 
 ## Features
-This is a list of actual features the current code base supports.  Eventually the goals will turn into features.
+This is a list of actual features the current code base supports.  Eventually the goals listed above will turn into features here.
 
 ### Current list of features
-* NONE - I am just getting started
+* Measure the temperature inside the keezer with two temperature sensors (one at the top and one at the bottom)
+* Control the keezer temperature given a temperature set point and the temperature sensor reading ()
 
 ## Hardware
+
+## Dependencies
+This application depends on the following libraries:
+* OneWire
+* DallasTemperature
+* RBD_Timer
+
