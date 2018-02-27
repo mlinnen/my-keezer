@@ -29,8 +29,20 @@ boolean TemperatureController::loop()
     Serial.print("Avg Temp ");
     Serial.print(_averageCurrentTemp, DEC);
     Serial.println();
+    Serial.print("Bottom Temp ");
+    Serial.print(_tempSensor->bottomTemperature(), DEC);
+    Serial.println();
+    Serial.print("Top Temp ");
+    Serial.print(_tempSensor->topTemperature(), DEC);
+    Serial.println();
 
-    if (_averageCurrentTemp<_lowSetpoint) {Serial.println("Compressor Off");}
-    if (_averageCurrentTemp>_highSetpoint) {Serial.println("Compressor On");}
+    if (_averageCurrentTemp<_lowSetpoint) {
+      Serial.println("Compressor Off");
+      digitalWrite(_relayPin,HIGH);
+      }
+    if (_averageCurrentTemp>_highSetpoint) {
+      Serial.println("Compressor On");
+      digitalWrite(_relayPin,LOW);
+      }
   }
 }
