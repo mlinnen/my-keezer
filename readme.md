@@ -39,6 +39,9 @@ This is a list of actual features the current code base supports.  Eventually th
 * Control the keezer temperature given a temperature set point and the temperature sensor reading ()
 
 ## Hardware
+2 DS18B20 Temperature Sensor
+1 4.7K Resistor
+1 ESP8266
 
 ## Dependencies
 This application depends on the following libraries:
