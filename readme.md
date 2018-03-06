@@ -85,3 +85,9 @@ This application depends on the following libraries:
 * DallasTemperature
 * RBD_Timer
 
+## Build
+There are a couple things you need to do before compiling the keezer.ino file.
+
+1. Make a copy of the config.sample.h and rename it config.h
+2. Edit the config.h and set the variables you want to change in this file.
+3. Compile and upload the sketch to your ESP8266 
