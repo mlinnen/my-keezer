@@ -39,10 +39,46 @@ This is a list of actual features the current code base supports.  Eventually th
 * Control the keezer temperature given a temperature set point and the temperature sensor reading ()
 
 ## Hardware
-2 DS18B20 Temperature Sensor
-1 4.7K Resistor
-1 ESP8266
+* 2 DS18B20 Temperature Sensor
+* 1 4.7K Resistor
+* 1 ESP8266
+* 1 SSR Input 3v DC Output AC 5 AMPS
+* 1 4 x 20 LCD
 
+### LCD Display layout
+A push button allows you to change the mode of the LCD.  Mode 1 is the default mode and after a certain amount of time the LCD will fall back into this mode.
+
+Example Mode 1 Top, Average & Bottom
+```
+Set  43.0 Top 43.5
+Avg  43.5 Avg 43.5
+Comp On   Bot 43.5
+```  
+Example Mode 1 Compressor off
+```
+Set  43.0 Top 43.5
+Avg  43.5 Avg 43.5
+Comp Off  Bot 43.5
+```  
+
+Example Mode 2 Hi, Low & Average for the day
+```
+Set  43.0 Hi  45.5  
+Avg  43.5 Avg 43.5  
+Comp On   Low 40.5  
+```
+Example Mode 3 Hi, Low & Top for the day
+```
+Set  43.0 Hi  45.5  
+Avg  43.5 Top 43.5  
+Comp On   Low 40.5  
+```
+Example Mode 4 Hi, Low & Bottom for the day
+```
+Set  43.0 Hi  45.5  
+Avg  43.5 Bot 43.5  
+Comp On   Low 40.5  
+```
 ## Dependencies
 This application depends on the following libraries:
 * OneWire
