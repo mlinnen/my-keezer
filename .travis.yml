@@ -12,6 +12,7 @@ install:
   - git clone https://github.com/PaulStoffregen/OneWire /usr/local/share/arduino/libraries/OneWire
   - git clone https://github.com/milesburton/Arduino-Temperature-Control-Library /usr/local/share/arduino/libraries/DallasTemperature
   - git clone https://github.com/alextaujenis/RBD_Timer /usr/local/share/arduino/libraries/RBD_Timer
+  - cp $PWD/src/keezer/config.sample.h $PWD/src/keezer/config.h
 script:
   - arduino --verify --board arduino:avr:uno $PWD/src/keezer/keezer.ino
 notifications:

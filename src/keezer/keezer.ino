@@ -1,5 +1,7 @@
 #include "TemperatureController.h"
 #include "ctype.h"
+#include "config.h"
+
 TemperatureController *tempController;
 
 void setup()
@@ -10,7 +12,7 @@ void setup()
   delay(5000);
 
   // Initialize the temperature controller
-  tempController = new TemperatureController(12, 40.0, 42.0);
+  tempController = new TemperatureController(12, TEMPERATURE_LOW, TEMPERATURE_HIGH);
 
   // Execute the setup on the temperature controller
   tempController->setup();
