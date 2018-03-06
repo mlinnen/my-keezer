@@ -27,13 +27,13 @@ boolean TemperatureController::loop()
   {
     _averageCurrentTemp = _tempSensor->averageTemperature();
     Serial.print("Avg Temp ");
-    Serial.print(_averageCurrentTemp, DEC);
+    Serial.print(_averageCurrentTemp, 1);
     Serial.println();
     Serial.print("Bottom Temp ");
-    Serial.print(_tempSensor->bottomTemperature(), DEC);
+    Serial.print(_tempSensor->bottomTemperature(), 1);
     Serial.println();
     Serial.print("Top Temp ");
-    Serial.print(_tempSensor->topTemperature(), DEC);
+    Serial.print(_tempSensor->topTemperature(), 1);
     Serial.println();
 
     if (_averageCurrentTemp<_lowSetpoint) {
