@@ -2,7 +2,6 @@
 #include "TemperatureSensor.h"
 
 
-
 TemperatureController::TemperatureController(int relayPin,float lowSetpoint, float highSetpoint)
 {
   _lowSetpoint = lowSetpoint;
@@ -17,7 +16,26 @@ void TemperatureController::setup()
   _tempSensor->setup();
 
   pinMode(_relayPin, OUTPUT);
+}
 
+float TemperatureController::setTemperature()
+{
+  return (_lowSetpoint + _highSetpoint)/2;
+}
+
+float TemperatureController::topTemperature()
+{
+  return _tempSensor->topTemperature();
+}
+
+float TemperatureController::bottomTemperature()
+{
+  return _tempSensor->bottomTemperature();
+}
+
+float TemperatureController::averageTemperature()
+{
+  return _tempSensor->averageTemperature();
 }
 
 boolean TemperatureController::loop()

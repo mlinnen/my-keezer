@@ -10,7 +10,6 @@ I have a number of goals I want to achieve for this custom controller.  At this 
 
 ### Current list of goals
 * Turn on/off an LED when the compressor is on/off
-* Display the current temperature of the keezer on an LCD
 * Broadcast current temperature readings via MQTT
 * Broadcast when the compressor turns on/off via MQTT
 * Set the temperature of the keezer via MQTT
@@ -37,13 +36,27 @@ This is a list of actual features the current code base supports.  Eventually th
 ### Current list of features
 * Measure the temperature inside the keezer with two temperature sensors (one at the top and one at the bottom)
 * Control the keezer temperature given a temperature set point and the temperature sensor reading ()
+* Display the current temperature of the keezer on an LCD
 
 ## Hardware
 * 2 DS18B20 Temperature Sensor
 * 1 4.7K Resistor
-* 1 ESP8266
+* 1 [HUZZAH ESP8266](https://www.adafruit.com/product/2471)
 * 1 SSR Input 3v DC Output AC 5 AMPS
-* 1 4 x 20 LCD
+* 1 [4 x 20 LCD](https://www.adafruit.com/product/498)
+* 1 [I2C / SPO character LCD backpack](https://www.adafruit.com/product/292)
+* 1 [12v 5A switching power supply](https://www.adafruit.com/product/352)
+* 1 [Mini DC/DC Converter 5v @ 1A](https://www.adafruit.com/product/1065)
+* 1 [LED Strip Light Triangle Bulbs](https://www.amazon.com/Triangle-Bulbs-T93003-Waterproof-Flexible/dp/B00IZA2URS)
+
+## I/O
+* 1 gpio for 1 wire for temperature sensors
+* 1 gpio for relay dc fan
+* 1 gpio for relay LED light strip
+* 1 gpio for SSR compressor
+* 1 gpio for motion sensor
+* 2 gpio for LCD
+* 1 gpio for push button LCD mode
 
 ### LCD Display layout
 A push button allows you to change the mode of the LCD.  Mode 1 is the default mode and after a certain amount of time the LCD will fall back into this mode.
@@ -84,6 +97,7 @@ This application depends on the following libraries:
 * OneWire
 * DallasTemperature
 * RBD_Timer
+* Adafruit_LiquidCrystal
 
 ## Build
 There are a couple things you need to do before compiling the keezer.ino file.

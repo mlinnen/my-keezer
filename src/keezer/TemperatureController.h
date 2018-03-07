@@ -11,6 +11,10 @@ class TemperatureController
     TemperatureController(int relayPin, float lowSetpoint, float highSetpoint);
     void setup();
     boolean loop();
+    float setTemperature();
+    float topTemperature();
+    float bottomTemperature();
+    float averageTemperature();
   private:
     int _relayPin;
     TemperatureSensor *_tempSensor;
