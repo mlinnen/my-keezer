@@ -11,7 +11,11 @@ class TemperatureLCD
   public:
     TemperatureLCD(TemperatureController *tempController);
     void setup();
-    void loop();
+    void changeMode();
+    void print();
+  private:
+    int _mode;
+    int _lastMode;
 };
 
 #endif

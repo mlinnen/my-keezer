@@ -61,42 +61,35 @@ This is a list of actual features the current code base supports.  Eventually th
 ### LCD Display layout
 A push button allows you to change the mode of the LCD.  Mode 1 is the default mode and after a certain amount of time the LCD will fall back into this mode.
 
-Example Mode 1 Top, Average & Bottom
+Example Mode 1 Top, Average & Bottom Compressor on
 ```
-Set  43.0 Top 43.5
-Avg  43.5 Avg 43.5
-Comp On   Bot 43.5
+Current Temperature
+Set  43.0 Top 44.5
+          Avg 43.5
+Comp On   Bot 42.5
 ```  
-Example Mode 1 Compressor off
+Example Mode 1 Top, Average & Bottom Compressor off
 ```
-Set  43.0 Top 43.5
-Avg  43.5 Avg 43.5
-Comp Off  Bot 43.5
+Current Temperature
+Set  43.0 Top 44.5
+          Avg 43.5
+Comp Off  Bot 42.5
 ```  
 
-Example Mode 2 Hi, Low & Average for the day
+Example Mode 2 Set Temperature
 ```
-Set  43.0 Hi  45.5  
-Avg  43.5 Avg 43.5  
-Comp On   Low 40.5  
+Set Temperature
+Top 44.0
+Avg 43.0
+Bot 42.0
 ```
-Example Mode 3 Hi, Low & Top for the day
-```
-Set  43.0 Hi  45.5  
-Avg  43.5 Top 43.5  
-Comp On   Low 40.5  
-```
-Example Mode 4 Hi, Low & Bottom for the day
-```
-Set  43.0 Hi  45.5  
-Avg  43.5 Bot 43.5  
-Comp On   Low 40.5  
-```
+
 ## Dependencies
 This application depends on the following libraries:
 * OneWire
 * DallasTemperature
 * RBD_Timer
+* RBD_Button
 * Adafruit_LiquidCrystal
 
 ## Build

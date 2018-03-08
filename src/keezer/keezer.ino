@@ -4,7 +4,6 @@
 #include "config.h"
 
 TemperatureController *tempController;
-TemperatureLCD *tempLCD;
 
 void setup()
 {
@@ -19,11 +18,8 @@ void setup()
     DEFAULT_TEMPERATURE_SETPOINT_LOW, 
     DEFAULT_TEMPERATURE_SETPOINT_HIGH);
 
-  tempLCD = new TemperatureLCD(tempController);
-
   // Execute the setup on the temperature controller
   tempController->setup();
-  tempLCD->setup();
 }
 
 void loop()
@@ -32,7 +28,6 @@ void loop()
 
   // Process all the loops
   tempController->loop();
-  tempLCD->loop();
 
   // TODO Determine if any state changes or sensor changes need to be broadcasted out over MQTT
 }

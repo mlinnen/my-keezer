@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 #include "TemperatureSensor.h"
+#include <RBD_Button.h>
 
 
 class TemperatureController
@@ -11,12 +12,16 @@ class TemperatureController
     TemperatureController(int relayPin, float lowSetpoint, float highSetpoint);
     void setup();
     boolean loop();
-    float setTemperature();
+    float highSetPointTemperature();
+    float averageSetPointTemperature();
+    float lowSetPointTemperature();
     float topTemperature();
     float bottomTemperature();
     float averageTemperature();
+    boolean compressor();
   private:
     int _relayPin;
+    boolean _compressor;
     TemperatureSensor *_tempSensor;
     float _lowSetpoint = 0;
     float _highSetpoint = 0;
