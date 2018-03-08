@@ -63,10 +63,12 @@ float TemperatureController::averageTemperature()
 
 boolean TemperatureController::loop()
 {
+  boolean refreshLCD = false;
   // Was the mode button pressed and if so then increment the mode of the 
   if (_modeButton.onPressed())
   {
     _tempLCD->changeMode();
+    refreshLCD = true;
   }
 
   // This is the service loop that is called from the main program and will update the state of this component.
@@ -102,7 +104,8 @@ boolean TemperatureController::loop()
     if (_compressor) {Serial.println("Compressor On");}
     else {Serial.println("Compressor Off");}
 
-    //_tempLCD->print();
-
+    refreshLCD = true;
   }
+
+  if (refreshLCD) {_tempLCD->print();}
 }
