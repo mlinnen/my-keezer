@@ -9,7 +9,7 @@
 class TemperatureController
 {
   public:
-    TemperatureController(int relayPin, float lowSetpoint, float highSetpoint);
+    TemperatureController(int compressorRelayPin, int fanRelayPin, float lowSetpoint, float highSetpoint);
     void setup();
     boolean loop();
     float highSetPointTemperature();
@@ -20,7 +20,8 @@ class TemperatureController
     float averageTemperature();
     boolean compressor();
   private:
-    int _relayPin;
+    int _compressorRelayPin;
+    int _fanRelayPin;
     boolean _compressor;
     TemperatureSensor *_tempSensor;
     float _lowSetpoint = 0;

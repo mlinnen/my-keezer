@@ -5,11 +5,12 @@ TemperatureLCD *_tempLCD;
 RBD::Button _modeButton(13);
 
 
-TemperatureController::TemperatureController(int relayPin,float lowSetpoint, float highSetpoint)
+TemperatureController::TemperatureController(int compressorRelayPin,int fanRelayPin, float lowSetpoint, float highSetpoint)
 {
   _lowSetpoint = lowSetpoint;
   _highSetpoint = highSetpoint;
-  _relayPin = relayPin;
+  _compressorRelayPin = compressorRelayPin;
+  _fanRelayPin = fanRelayPin;
   _tempLCD = new TemperatureLCD(tempController);
 
 }
@@ -20,8 +21,11 @@ void TemperatureController::setup()
   _tempSensor = new TemperatureSensor(false,3);
   _tempSensor->setup();
 
-  pinMode(_relayPin, OUTPUT);
-
+  pinMode(_compressorRelayPin, OUTPUT);
+  pinMode(_fanRelayPin, OUTPUT);
+  digitalWrite(_fanRelayPin, LOW);
+  digitalWrite(_compressorRelayPin, LOW);
+  
   _tempLCD->setup();
 
 }
@@ -94,12 +98,14 @@ boolean TemperatureController::loop()
 
     if (_averageCurrentTemp<_lowSetpoint) {
       _compressor = false;
-      digitalWrite(_relayPin,LOW);
-      }
+      digitalWrite(_compressorRelayPin,LOW);
+      digitalWrite(_fanRelayPin,LOW);
+    }
     if (_averageCurrentTemp>_highSetpoint) {
       _compressor = true;
-      digitalWrite(_relayPin,HIGH);
-      }
+      digitalWrite(_compressorRelayPin,HIGH);
+      digitalWrite(_fanRelayPin,HIGH);
+    }
 
     if (_compressor) {Serial.println("Compressor On");}
     else {Serial.println("Compressor Off");}

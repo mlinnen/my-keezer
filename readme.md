@@ -13,7 +13,6 @@ I have a number of goals I want to achieve for this custom controller.  At this 
 * Broadcast current temperature readings via MQTT
 * Broadcast when the compressor turns on/off via MQTT
 * Set the temperature of the keezer via MQTT
-* Turn on/off a fan to circulate the air in the keezer
 * Set the statistics of the beer in a keg via MQTT (Tap #, Name, Style, ABV, Date kegged)
 * Broadcast the statistics of the beer in each keg via MQTT (Tap #, Name, Style, ABV, Date kegged)
 * Display the statistics of the beer in each keg (Tap #. Name, Style, ABV, Date kegged) on an LCD
@@ -26,8 +25,6 @@ I have a number of goals I want to achieve for this custom controller.  At this 
 * Display the amount of Co2 in my tank on an LCD
 * Broadcast the amount of Co2 in my tank over MQTT
 * Display some of the keezer statistics on my Home Automation system.
-* Detect motion when someone approaches the keezer
-* Turn on LED lighting when someone approaches and turn off the lighting after a delay
 * Alexa tell you about the beers on tap
 
 ## Features
@@ -37,12 +34,15 @@ This is a list of actual features the current code base supports.  Eventually th
 * Measure the temperature inside the keezer with two temperature sensors (one at the top and one at the bottom)
 * Control the keezer temperature given a temperature set point and the temperature sensor reading ()
 * Display the current temperature of the keezer on an LCD
+* Turn on/off a fan to circulate the air in the keezer
+* Detect motion when someone approaches the keezer
+* Turn on LED lighting when someone approaches and turn off the lighting after a delay
 
 ## Hardware
 * 2 DS18B20 Temperature Sensor
 * 1 4.7K Resistor
 * 1 [HUZZAH ESP8266](https://www.adafruit.com/product/2471)
-* 1 SSR Input 3v DC Output AC 5 AMPS
+* 1 [4 Channel Relay Board](https://www.sunfounder.com/4-channel-5v-relay-shield-module.html)
 * 1 [4 x 20 LCD](https://www.adafruit.com/product/498)
 * 1 [I2C / SPO character LCD backpack](https://www.adafruit.com/product/292)
 * 1 [12v 5A switching power supply](https://www.adafruit.com/product/352)
