@@ -52,8 +52,8 @@ void TemperatureSensor::setup()
   Serial.print(_ds18b20.getDeviceCount(), DEC);
   Serial.println(" temperature devices.");
 
-  if (!_ds18b20.getAddress(_topThermometer, 0)) Serial.println("Unable to find address for temperature Device 0");
-  if (!_ds18b20.getAddress(_bottomThermometer, 1)) Serial.println("Unable to find address for temperature Device 1");
+  if (!_ds18b20.getAddress(_bottomThermometer, 0)) Serial.println("Unable to find address for temperature Device 0");
+  if (!_ds18b20.getAddress(_topThermometer, 1)) Serial.println("Unable to find address for temperature Device 1");
 
   // Must be called before search()
   _oneWire.reset_search();
