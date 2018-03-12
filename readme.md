@@ -49,6 +49,9 @@ This is a list of actual features the current code base supports.  Eventually th
 * 1 [Mini DC/DC Converter 5v @ 1A](https://www.adafruit.com/product/1065)
 * 1 [LED Strip Light Triangle Bulbs](https://www.amazon.com/Triangle-Bulbs-T93003-Waterproof-Flexible/dp/B00IZA2URS)
 
+## Wiring
+I used Fritzing to document the wiring of all components.  After installing Fritzing just open the doc\keezer.fzz file from Fritzing.
+
 ## I/O
 * 1 gpio for 1 wire for temperature sensors
 * 1 gpio for relay dc fan
@@ -97,4 +100,4 @@ There are a couple things you need to do before compiling the keezer.ino file.
 
 1. Make a copy of the config.sample.h and rename it config.h
 2. Edit the config.h and set the variables you want to change in this file.
-3. Compile and upload the sketch to your ESP8266 
+3. Open the src\keezer\keezer.ino file with the Arduino IDE and upload the sketch to your ESP8266.
