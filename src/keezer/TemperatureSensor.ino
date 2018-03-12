@@ -56,29 +56,29 @@ void TemperatureSensor::setup()
   if (!_ds18b20.getAddress(_topThermometer, 1)) Serial.println("Unable to find address for temperature Device 1");
 
   // Must be called before search()
-  _oneWire.reset_search();
+  //_oneWire.reset_search();
   // assigns the first address found to insideThermometer
-  if (!_oneWire.search(_topThermometer)) Serial.println("Unable to find address for Top Thermometer");
+  //if (!_oneWire.search(_topThermometer)) Serial.println("Unable to find address for Top Thermometer");
   // assigns the seconds address found to outsideThermometer
-  if (!_oneWire.search(_bottomThermometer)) Serial.println("Unable to find address for Bottom Thermometer");
+  //if (!_oneWire.search(_bottomThermometer)) Serial.println("Unable to find address for Bottom Thermometer");
 
   Serial.print("Temperature Device 0 Address: ");
-  printAddress(_topThermometer);
-  Serial.println();
-
-  Serial.print("Temperature Device 1 Address: ");
   printAddress(_bottomThermometer);
   Serial.println();
 
-  _ds18b20.setResolution(_topThermometer, TEMPERATURE_PRECISION);
+  Serial.print("Temperature Device 1 Address: ");
+  printAddress(_topThermometer);
+  Serial.println();
+
   _ds18b20.setResolution(_bottomThermometer, TEMPERATURE_PRECISION);
+  _ds18b20.setResolution(_topThermometer, TEMPERATURE_PRECISION);
 
   Serial.print("Temperature Device 0 Resolution: ");
-  Serial.print(_ds18b20.getResolution(_topThermometer), DEC);
+  Serial.print(_ds18b20.getResolution(_bottomThermometer), DEC);
   Serial.println();
 
   Serial.print("Temperature Device 1 Resolution: ");
-  Serial.print(_ds18b20.getResolution(_bottomThermometer), DEC);
+  Serial.print(_ds18b20.getResolution(_topThermometer), DEC);
   Serial.println();
 
   _frequencyTimer.setTimeout(_frequencySeconds * 1000);
