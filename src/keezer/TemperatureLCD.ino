@@ -11,25 +11,28 @@ TemperatureLCD::TemperatureLCD(TemperatureController *tempController)
 
 void printText(int mode)
 {
-  _lcd.setCursor(0, 1);
   switch (mode) {
     case 1:
-      _lcd.println("Current Temperature");
-      _lcd.println("Set      Top");
-      _lcd.println("         Avg");
-      _lcd.println("Comp     Bot");
+      _lcd.setCursor(0, 0);
+      _lcd.print("Current Temperature ");
+      _lcd.setCursor(0, 1);
+      _lcd.print("Set      Top        ");
+      _lcd.setCursor(0, 2);
+      _lcd.print("         Avg        ");
+      _lcd.setCursor(0, 3);
+      _lcd.print("Comp     Bot        ");
       break;
     case 2:
-      _lcd.println("Set Temperature");
-      _lcd.println("High");
-      _lcd.println("Avg");
-      _lcd.println("Low");
+      _lcd.print("Set Temperature     ");
+      _lcd.print("High                ");
+      _lcd.print("Avg                 ");
+      _lcd.print("Low                 ");
       break;
     case 3:
-      _lcd.println("Daily Temperature");
-      _lcd.println("Top Hi      Low");
-      _lcd.println("Avg Hi      Low");
-      _lcd.println("Bot Hi      Low");
+      _lcd.print("Daily Temperature   ");
+      _lcd.print("Top Hi      Low     ");
+      _lcd.print("Avg Hi      Low     ");
+      _lcd.print("Bot Hi      Low     ");
       break;
   }
 
@@ -45,8 +48,8 @@ void printVariables(int mode)
       _lcd.print(_tempController->topTemperature(),1);
       _lcd.setCursor(13, 2);
       _lcd.print(_tempController->averageTemperature(),1);
-      _lcd.setCursor(4, 3);
-      if (_tempController->compressor()) {_lcd.print("On");}
+      _lcd.setCursor(5, 3);
+      if (_tempController->compressor()) {_lcd.print("On ");}
       else {_lcd.print("Off");}
       _lcd.setCursor(13, 3);
       _lcd.print(_tempController->bottomTemperature(),1);
@@ -68,7 +71,7 @@ void TemperatureLCD::setup()
   // set up the LCD's number of rows and columns: 
   _lcd.begin(20, 4);
   // Print a message to the LCD.
-  _lcd.println("Keezer Temperature");
+  _lcd.print("Keezer Temperature  ");
 
 }
 

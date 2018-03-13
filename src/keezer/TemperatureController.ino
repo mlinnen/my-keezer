@@ -11,14 +11,14 @@ TemperatureController::TemperatureController(int compressorRelayPin,int fanRelay
   _highSetpoint = highSetpoint;
   _compressorRelayPin = compressorRelayPin;
   _fanRelayPin = fanRelayPin;
-  _tempLCD = new TemperatureLCD(tempController);
+  _tempLCD = new TemperatureLCD(this);
 
 }
 
 void TemperatureController::setup()
 {
   // Perform any onetime setup.
-  _tempSensor = new TemperatureSensor(false,3);
+  _tempSensor = new TemperatureSensor(false,1);
   _tempSensor->setup();
 
   pinMode(_compressorRelayPin, OUTPUT);
