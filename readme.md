@@ -10,11 +10,9 @@ I have a number of goals I want to achieve for this custom controller.  At this 
 
 ### Current list of goals
 * Turn on/off an LED when the compressor is on/off
-* Display the current temperature of the keezer on an LCD
 * Broadcast current temperature readings via MQTT
 * Broadcast when the compressor turns on/off via MQTT
 * Set the temperature of the keezer via MQTT
-* Turn on/off a fan to circulate the air in the keezer
 * Set the statistics of the beer in a keg via MQTT (Tap #, Name, Style, ABV, Date kegged)
 * Broadcast the statistics of the beer in each keg via MQTT (Tap #, Name, Style, ABV, Date kegged)
 * Display the statistics of the beer in each keg (Tap #. Name, Style, ABV, Date kegged) on an LCD
@@ -27,8 +25,6 @@ I have a number of goals I want to achieve for this custom controller.  At this 
 * Display the amount of Co2 in my tank on an LCD
 * Broadcast the amount of Co2 in my tank over MQTT
 * Display some of the keezer statistics on my Home Automation system.
-* Detect motion when someone approaches the keezer
-* Turn on LED lighting when someone approaches and turn off the lighting after a delay
 * Alexa tell you about the beers on tap
 
 ## Features
@@ -37,12 +33,71 @@ This is a list of actual features the current code base supports.  Eventually th
 ### Current list of features
 * Measure the temperature inside the keezer with two temperature sensors (one at the top and one at the bottom)
 * Control the keezer temperature given a temperature set point and the temperature sensor reading ()
+* Display the current temperature of the keezer on an LCD
+* Turn on/off a fan to circulate the air in the keezer
+* Detect motion when someone approaches the keezer
+* Turn on LED lighting when someone approaches and turn off the lighting after a delay
 
 ## Hardware
+* 2 DS18B20 Temperature Sensor
+* 1 4.7K Resistor
+* 1 [HUZZAH ESP8266](https://www.adafruit.com/product/2471)
+* 1 [4 Channel Relay Board](https://www.sunfounder.com/4-channel-5v-relay-shield-module.html)
+* 1 [4 x 20 LCD](https://www.adafruit.com/product/498)
+* 1 [I2C / SPO character LCD backpack](https://www.adafruit.com/product/292)
+* 1 [12v 5A switching power supply](https://www.adafruit.com/product/352)
+* 1 [Mini DC/DC Converter 5v @ 1A](https://www.adafruit.com/product/1065)
+* 1 [LED Strip Light Triangle Bulbs](https://www.amazon.com/Triangle-Bulbs-T93003-Waterproof-Flexible/dp/B00IZA2URS)
+
+## Wiring
+I used Fritzing to document the wiring of all components.  After installing Fritzing just open the doc\keezer.fzz file from Fritzing.
+
+## I/O
+* 1 gpio for 1 wire for temperature sensors
+* 1 gpio for relay dc fan
+* 1 gpio for relay LED light strip
+* 1 gpio for SSR compressor
+* 1 gpio for motion sensor
+* 2 gpio for LCD
+* 1 gpio for push button LCD mode
+
+### LCD Display layout
+A push button allows you to change the mode of the LCD.  Mode 1 is the default mode and after a certain amount of time the LCD will fall back into this mode.
+
+Example Mode 1 Top, Average & Bottom Compressor on
+```
+Current Temperature
+Set  43.0 Top 44.5
+          Avg 43.5
+Comp On   Bot 42.5
+```  
+Example Mode 1 Top, Average & Bottom Compressor off
+```
+Current Temperature
+Set  43.0 Top 44.5
+          Avg 43.5
+Comp Off  Bot 42.5
+```  
+
+Example Mode 2 Set Temperature
+```
+Set Temperature
+Top 44.0
+Avg 43.0
+Bot 42.0
+```
 
 ## Dependencies
 This application depends on the following libraries:
 * OneWire
 * DallasTemperature
 * RBD_Timer
+* RBD_Button
+* Adafruit_LiquidCrystal
 
+## Build
+There are a couple things you need to do before compiling the keezer.ino file.
+
+1. Make a copy of the config.sample.h and rename it config.h
+2. Edit the config.h and set the variables you want to change in this file.
+3. Open the src\keezer\keezer.ino file with the Arduino IDE and upload the sketch to your ESP8266.
