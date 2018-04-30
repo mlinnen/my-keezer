@@ -23,8 +23,8 @@ void TemperatureController::setup()
 
   pinMode(_compressorRelayPin, OUTPUT);
   pinMode(_fanRelayPin, OUTPUT);
-  digitalWrite(_fanRelayPin, LOW);
-  digitalWrite(_compressorRelayPin, LOW);
+  digitalWrite(_fanRelayPin, HIGH);
+  digitalWrite(_compressorRelayPin, HIGH);
   
   _tempLCD->setup();
 
@@ -98,13 +98,13 @@ boolean TemperatureController::loop()
 
     if (_averageCurrentTemp<_lowSetpoint) {
       _compressor = false;
-      digitalWrite(_compressorRelayPin,LOW);
-      digitalWrite(_fanRelayPin,LOW);
+      digitalWrite(_compressorRelayPin,HIGH);
+      digitalWrite(_fanRelayPin,HIGH);
     }
     if (_averageCurrentTemp>_highSetpoint) {
       _compressor = true;
-      digitalWrite(_compressorRelayPin,HIGH);
-      digitalWrite(_fanRelayPin,HIGH);
+      digitalWrite(_compressorRelayPin,LOW);
+      digitalWrite(_fanRelayPin,LOW);
     }
 
     if (_compressor) {Serial.println("Compressor On");}
