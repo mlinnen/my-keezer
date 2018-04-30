@@ -11,20 +11,21 @@ LightController::LightController(int motionSensorPin,int lightRelayPin)
 void LightController::setup()
 {
     pinMode(_lightRelayPin, OUTPUT);
-    digitalWrite(_lightRelayPin,LOW);
+    pinMode(_motionSensorPin, INPUT);
+    digitalWrite(_lightRelayPin,HIGH);
 }
 
 boolean LightController::loop()
 {
     if (digitalRead(_motionSensorPin)){
         // Turn on the lights and start the timer
-        digitalWrite(_lightRelayPin,HIGH);
+        digitalWrite(_lightRelayPin,LOW);
         timer.setTimeout(120000);
     }
 
     if(timer.onExpired()) {
         // turn off the lights
-        digitalWrite(_lightRelayPin,LOW);
+        digitalWrite(_lightRelayPin,HIGH);
     }
 }
 
