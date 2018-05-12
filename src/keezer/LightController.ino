@@ -21,6 +21,7 @@ boolean LightController::loop()
         // Turn on the lights and start the timer
         digitalWrite(_lightRelayPin,LOW);
         timer.setTimeout(120000);
+        timer.restart();
     }
 
     if(timer.onExpired()) {
