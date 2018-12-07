@@ -1,5 +1,6 @@
 #include "TemperatureController.h"
 #include "TemperatureSensor.h"
+#include "TemperatureLCD.h"
 
 TemperatureLCD *_tempLCD;
 RBD::Button _modeButton(13);

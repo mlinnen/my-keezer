@@ -1,3 +1,4 @@
+#include "Arduino.h"
 #include "TemperatureController.h"
 #include "LightController.h"
 #include "TemperatureLCD.h"
