@@ -88,7 +88,6 @@ void TemperatureSensor::setup()
 boolean TemperatureSensor::loop()
 {
   boolean newReadingAvailable = false;
-  float temp;
 
   if (_frequencyTimer.isExpired())
   {

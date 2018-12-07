@@ -115,4 +115,6 @@ boolean TemperatureController::loop()
   }
 
   if (refreshLCD) {_tempLCD->print();}
+
+  return true;
 }

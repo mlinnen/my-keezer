@@ -28,5 +28,7 @@ boolean LightController::loop()
         // turn off the lights
         digitalWrite(_lightRelayPin,HIGH);
     }
+
+    return true;
 }
 
