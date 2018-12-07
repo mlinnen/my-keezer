@@ -37,7 +37,7 @@ install:
     - platformio lib -g install 1 54 136 478 737 855
 
 script:
-    - cp config.sample.h config.h
+    - cp src/config.sample.h src/config.h
     - platformio ci -b huzzah src
 
 
