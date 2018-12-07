@@ -37,6 +37,6 @@ install:
     - platformio lib -g install 1 54 136 478 737 855
 
 script:
-    - platformio run
+    - platformio ci -b huzzah src
 
 
