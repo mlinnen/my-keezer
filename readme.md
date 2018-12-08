@@ -80,8 +80,10 @@ This application depends on the following libraries:
 * Adafruit_LiquidCrystal
 
 ## Build
-There are a couple things you need to do before compiling the keezer.ino file.
+There are a couple things you need to do so that you can compile the project. I converted this project to use [Platform IO](https://platformio.org/) so you will need to install it as well as an editor. I personally think that the Visual Studio code editor works very well with Platform IO.
 
 1. Make a copy of the config.sample.h and rename it config.h
 2. Edit the config.h and set the variables you want to change in this file.
-3. Open the src\keezer\keezer.ino file with the Arduino IDE and upload the sketch to your ESP8266.
+3. Place the ESP8266 into flash mode
+4. Run the following command 
+        pio run --target upload
