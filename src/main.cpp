@@ -16,8 +16,8 @@ const char* ssid = WLAN_SSID;
 const char* password = WLAN_PASS;
 const char* mqtt_server = MQTT_SERVER;
 
-const char* MQTT_TOPIC_PING = "/ha/keezer/ping";
-const char* MQTT_TOPIC_PINGR = "/ha/keezer/pingr/1";
+const char* mqttPingTopic = MQTT_TOPIC_PING;
+const char* mqttPingResponseTopic = MQTT_TOPIC_PINGR;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -55,8 +55,8 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.println();
   
   // If we get a ping request then respond to it
-  if (strstr(topic,MQTT_TOPIC_PING)){
-    client.publish(MQTT_TOPIC_PINGR, " ");
+  if (strstr(topic,mqttPingTopic)){
+    client.publish(mqttPingResponseTopic, " ");
   }
 }
 
@@ -71,7 +71,7 @@ void reconnect() {
     if (client.connect(clientId.c_str(),MQTT_USERNAME,MQTT_PASSWORD)) {
       Serial.println("connected");
       // Once connected, re-subscribe
-      client.subscribe(MQTT_TOPIC_PING);
+      client.subscribe(mqttPingTopic);
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
