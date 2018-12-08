@@ -85,7 +85,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 }
 
 void reconnect() {
-  // is it time to try a re-connect?
+  // is it time to try a re-connect to the MQTT broker?
   if (_mqttReconnectTimer.isExpired() || _initialSetup)
   {
     // Make sure we are not already connected
@@ -117,18 +117,17 @@ void setup()
 
   randomSeed(micros());
 
-  // Delay a little bit so we can catch the serial port data during setup
+  // Delay a little bit to give a developer time to connect the monitor to the serial port before running through the rest os the setup
   delay(5000);
 
-  // Setup a timer to connect to Wifi for 30 seconds
+  // Setup the timer to retry a connection to Wifi in 30 seconds
   _wifiConnectTimer.setTimeout(30000);
-  //_wifiConnectTimer.restart();
 
+  // Try to connect to the wifi
   setup_wifi();
 
-  // Setup a timer to connect to MQTT after 30 seconds
+  // Setup the timer to retry a connection to MQTT in 30 seconds
   _mqttReconnectTimer.setTimeout(30000);
-  _mqttReconnectTimer.restart();
 
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
@@ -140,11 +139,16 @@ void setup()
     client);
   lightController = new LightController(14,15);
 
+  // Run the setup on the temparature controller
   tempController->setup();
+
+  // Run the setup on the light controller
   lightController->setup();
   
+  // Try to connect to the MQTT broker
   reconnect();
 
+  // The inital setup was executed so set the variable to false
   _initialSetup = false;
 
 }
@@ -152,17 +156,20 @@ void setup()
 void loop()
 {
   // Connect to Wifi if not connected
-  if (WiFi.status() != WL_CONNECTED)
-  {
+  if (WiFi.status() != WL_CONNECTED) {
+    // Try to connect to wifi
     setup_wifi();
   }
-  // Check connection to MQTT broker
- if (!client.connected()) {
+
+  // Connect to MQTT broker if not connected
+  if (!client.connected()) {
+    // Try to connect to MQTT broker
     reconnect();
   }
-  if (client.connected()) {client.loop();}
 
   // Process all the loops
+  // if we are connected to the broker then run it's loop
+  if (client.connected()) {client.loop();}
   tempController->loop();
   lightController->loop();
 
