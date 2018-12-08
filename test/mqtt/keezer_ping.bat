@@ -1,1 +1,1 @@
-python publish.py -c "config.ini" -t /ha/keezer/ping -m " "
+python publish.py -c "config.ini" -t /home/keezer/ping -m " "
