@@ -5,15 +5,16 @@
 TemperatureLCD *_tempLCD;
 RBD::Button _modeButton(13);
 
+char message_buff[20];
 
-TemperatureController::TemperatureController(int compressorRelayPin,int fanRelayPin, float lowSetpoint, float highSetpoint)
+TemperatureController::TemperatureController(int compressorRelayPin,int fanRelayPin, float lowSetpoint, float highSetpoint, PubSubClient &client)
 {
   _lowSetpoint = lowSetpoint;
   _highSetpoint = highSetpoint;
   _compressorRelayPin = compressorRelayPin;
   _fanRelayPin = fanRelayPin;
   _tempLCD = new TemperatureLCD(this);
-
+  _client = client;
 }
 
 void TemperatureController::setup()
@@ -79,6 +80,8 @@ boolean TemperatureController::loop()
   // This is the service loop that is called from the main program and will update the state of this component.
   if (_tempSensor->loop() == true)
   {
+    String temp_str; 
+
     _averageCurrentTemp = _tempSensor->averageTemperature();
     Serial.print("Hi  Setpoint ");
     Serial.println(highSetPointTemperature(), 1);
@@ -89,12 +92,21 @@ boolean TemperatureController::loop()
 
     Serial.print("Avg Temp ");
     Serial.print(_averageCurrentTemp, 1);
+    temp_str = String(_averageCurrentTemp);
+    temp_str.toCharArray(message_buff, temp_str.length() + 1); 
+    _client.publish(MQTT_TOPIC_TEMP_AVG, message_buff);
     Serial.println();
     Serial.print("Bot Temp ");
     Serial.print(_tempSensor->bottomTemperature(), 1);
+    temp_str = String(_tempSensor->bottomTemperature());
+    temp_str.toCharArray(message_buff, temp_str.length() + 1); 
+    _client.publish(MQTT_TOPIC_TEMP_BOTTOM, message_buff);
     Serial.println();
     Serial.print("Top Temp ");
     Serial.print(_tempSensor->topTemperature(), 1);
+    temp_str = String(_tempSensor->topTemperature());
+    temp_str.toCharArray(message_buff, temp_str.length() + 1); 
+    _client.publish(MQTT_TOPIC_TEMP_TOP, message_buff);
     Serial.println();
 
     if (_averageCurrentTemp<_lowSetpoint) {
