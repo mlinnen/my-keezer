@@ -29,6 +29,7 @@ class TemperatureController
     float _highSetpoint = 0;
     float _averageCurrentTemp = 0;
     PubSubClient _client;
+    void publishTemp(const char* topic, float temp);
 };
 
 #endif
