@@ -8,33 +8,17 @@ Dev Branch [![Build Status](https://travis-ci.org/mlinnen/my-keezer.svg?branch=d
 ## Goals 
 I have a number of goals I want to achieve for this custom controller.  At this point I doubt all of this could or should be done on a single ESP8266 micro.  It is likely I will have a number of ESP8266's that work together over MQTT to achieve all of the functionality I want.  This project will evolve over a long period of time.  The following is a list of goals which I hope to eventually turn into actual features.
 
-### Current list of goals
-* Turn on/off an LED when the compressor is on/off
-* Broadcast current temperature readings via MQTT
-* Broadcast when the compressor turns on/off via MQTT
-* Set the temperature of the keezer via MQTT
-* Set the statistics of the beer in a keg via MQTT (Tap #, Name, Style, ABV, Date kegged)
-* Broadcast the statistics of the beer in each keg via MQTT (Tap #, Name, Style, ABV, Date kegged)
-* Display the statistics of the beer in each keg (Tap #. Name, Style, ABV, Date kegged) on an LCD
-* Measure the beer flow to keep track of how much beer is left in the keg
-* Turn on an LED when the beer is close to empty in a keg
-* Broadcast the amount of beer in the keg via MQTT
-* Display the amount of beer left in the keg on an LCD
-* Measure the amount of Co2 in my tank
-* Turn on an LED when the Co2 is getting low
-* Display the amount of Co2 in my tank on an LCD
-* Broadcast the amount of Co2 in my tank over MQTT
-* Display some of the keezer statistics on my Home Automation system.
-* Alexa tell you about the beers on tap
+### Future list of features
+Check out the [Github Issues (label enhancements)](https://github.com/mlinnen/my-keezer/labels/enhancement) for a list of features that are planned for a later date.
 
 ## Features
-This is a list of actual features the current code base supports.  Eventually the goals listed above will turn into features here.
+This is a list of actual features the current code base supports.
 
 ### Current list of features
 * Measure the temperature inside the keezer with two temperature sensors (one at the top and one at the bottom)
 * Control the keezer temperature given a temperature set point and the temperature sensor reading ()
 * Display the current temperature of the keezer on an LCD
-* Turn on/off a fan to circulate the air in the keezer
+* Turn on/off a fan(s) to circulate the air in the keezer
 * Detect motion when someone approaches the keezer
 * Turn on LED lighting when someone approaches and turn off the lighting after a delay
 
@@ -96,8 +80,10 @@ This application depends on the following libraries:
 * Adafruit_LiquidCrystal
 
 ## Build
-There are a couple things you need to do before compiling the keezer.ino file.
+There are a couple things you need to do so that you can compile the project. I converted this project to use [Platform IO](https://platformio.org/) so you will need to install it as well as an editor. I personally think that the Visual Studio code editor works very well with Platform IO.
 
 1. Make a copy of the config.sample.h and rename it config.h
 2. Edit the config.h and set the variables you want to change in this file.
-3. Open the src\keezer\keezer.ino file with the Arduino IDE and upload the sketch to your ESP8266.
+3. Place the ESP8266 into flash mode
+4. Run the following command 
+        pio run --target upload
