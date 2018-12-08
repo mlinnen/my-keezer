@@ -19,11 +19,20 @@ const char* mqtt_server = MQTT_SERVER;
 const char* mqttPingTopic = MQTT_TOPIC_PING;
 const char* mqttPingResponseTopic = MQTT_TOPIC_PINGR;
 
+RBD::Timer _mqttReconnectTimer;
+RBD::Timer _wifiConnectTimer;
+
+boolean _initialSetup = true;
+
 WiFiClient espClient;
 PubSubClient client(espClient);
 
 void setup_wifi() {
 
+  if (!_initialSetup && !_wifiConnectTimer.isExpired())
+  {
+    return;
+  }
   delay(10);
   // We start by connecting to a WiFi network
   Serial.println();
@@ -32,17 +41,32 @@ void setup_wifi() {
 
   WiFi.begin(ssid, password);
 
-  while (WiFi.status() != WL_CONNECTED) {
+  int numberOfTries = 10;
+  if (!_initialSetup)
+  {
+    numberOfTries = 1;
+  }
+  int count = 0;
+  while (count < numberOfTries) {
+    if (WiFi.status() == WL_CONNECTED){ break;}
     delay(500);
     Serial.print(".");
+    count++;
   }
 
-  randomSeed(micros());
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    Serial.println("");
+    Serial.println("WiFi connected");
+    Serial.println("IP address: ");
+    Serial.println(WiFi.localIP());
+  }
+  else
+  {
+    Serial.println("Unable to connect to WiFi but will try again later");
+    _wifiConnectTimer.restart();
+  }
 
-  Serial.println("");
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
@@ -61,23 +85,28 @@ void callback(char* topic, byte* payload, unsigned int length) {
 }
 
 void reconnect() {
-  // Loop until we're reconnected
-  while (!client.connected()) {
-    Serial.print("Attempting MQTT connection...");
-    // Create a random client ID
-    String clientId = "ESP8266Client-";
-    clientId += String(random(0xffff), HEX);
-    // Attempt to connect
-    if (client.connect(clientId.c_str(),MQTT_USERNAME,MQTT_PASSWORD)) {
-      Serial.println("connected");
-      // Once connected, re-subscribe
-      client.subscribe(mqttPingTopic);
-    } else {
-      Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
-      // Wait 5 seconds before retrying
-      delay(5000);
+  // is it time to try a re-connect?
+  if (_mqttReconnectTimer.isExpired() || _initialSetup)
+  {
+    // Make sure we are not already connected
+    if (!client.connected())
+    {
+      Serial.print("Attempting MQTT connection...");
+      // Create a random client ID
+      String clientId = "ESP8266Client-";
+      clientId += String(random(0xffff), HEX);
+      // Attempt to connect
+      if (client.connect(clientId.c_str(),MQTT_USERNAME,MQTT_PASSWORD)) {
+        Serial.println("connected");
+        // Once connected, re-subscribe
+        client.subscribe(mqttPingTopic);
+        // TODO add any Other Subscriptions
+      } else {
+        Serial.print("failed, rc=");
+        Serial.print(client.state());
+        Serial.println(" try again in 30 seconds");
+        _mqttReconnectTimer.restart();
+      }
     }
   }
 }
@@ -86,10 +115,21 @@ void setup()
 {
   Serial.begin(9600);
 
-    // Delay a little bit so we can catch the serial port data during setup
+  randomSeed(micros());
+
+  // Delay a little bit so we can catch the serial port data during setup
   delay(5000);
 
+  // Setup a timer to connect to Wifi for 30 seconds
+  _wifiConnectTimer.setTimeout(30000);
+  //_wifiConnectTimer.restart();
+
   setup_wifi();
+
+  // Setup a timer to connect to MQTT after 30 seconds
+  _mqttReconnectTimer.setTimeout(30000);
+  _mqttReconnectTimer.restart();
+
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
 
@@ -102,15 +142,25 @@ void setup()
 
   tempController->setup();
   lightController->setup();
+  
+  reconnect();
+
+  _initialSetup = false;
+
 }
 
 void loop()
 {
-  // Connect to MQTT broker
+  // Connect to Wifi if not connected
+  if (WiFi.status() != WL_CONNECTED)
+  {
+    setup_wifi();
+  }
+  // Check connection to MQTT broker
  if (!client.connected()) {
     reconnect();
   }
-  client.loop();
+  if (client.connected()) {client.loop();}
 
   // Process all the loops
   tempController->loop();
