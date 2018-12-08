@@ -5,15 +5,22 @@
 #include "ctype.h"
 #include "config.h"
 #include "mywifi.h"
+#include "mymqttbroker.h"
 #include <ESP8266WiFi.h>
+#include <PubSubClient.h>
 
 TemperatureController *tempController;
 LightController *lightController;
 
 const char* ssid = WLAN_SSID;
 const char* password = WLAN_PASS;
+const char* mqtt_server = MQTT_SERVER;
+
+const char* MQTT_TOPIC_PING = "/ha/keezer/ping";
+const char* MQTT_TOPIC_PINGR = "/ha/keezer/pingr/1";
 
 WiFiClient espClient;
+PubSubClient client(espClient);
 
 void setup_wifi() {
 
@@ -38,6 +45,43 @@ void setup_wifi() {
   Serial.println(WiFi.localIP());
 }
 
+void callback(char* topic, byte* payload, unsigned int length) {
+  Serial.print("Message arrived [");
+  Serial.print(topic);
+  Serial.print("] ");
+  for (int i = 0; i < length; i++) {
+    Serial.print((char)payload[i]);
+  }
+  Serial.println();
+  
+  // If we get a ping request then respond to it
+  if (strstr(topic,MQTT_TOPIC_PING)){
+    client.publish(MQTT_TOPIC_PINGR, " ");
+  }
+}
+
+void reconnect() {
+  // Loop until we're reconnected
+  while (!client.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    // Create a random client ID
+    String clientId = "ESP8266Client-";
+    clientId += String(random(0xffff), HEX);
+    // Attempt to connect
+    if (client.connect(clientId.c_str(),MQTT_USERNAME,MQTT_PASSWORD)) {
+      Serial.println("connected");
+      // Once connected, re-subscribe
+      client.subscribe(MQTT_TOPIC_PING);
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      // Wait 5 seconds before retrying
+      delay(5000);
+    }
+  }
+}
+
 void setup()
 {
   Serial.begin(9600);
@@ -46,7 +90,9 @@ void setup()
   delay(5000);
 
   setup_wifi();
-  
+  client.setServer(mqtt_server, 1883);
+  client.setCallback(callback);
+
   tempController = new TemperatureController(
     16, 12, 
     DEFAULT_TEMPERATURE_SETPOINT_LOW, 
@@ -59,7 +105,11 @@ void setup()
 
 void loop()
 {
-  // TODO Look for any messages that came in over MQTT
+  // Connect to MQTT broker
+ if (!client.connected()) {
+    reconnect();
+  }
+  client.loop();
 
   // Process all the loops
   tempController->loop();

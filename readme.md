@@ -79,6 +79,7 @@ This application depends on the following libraries:
 * RBD_Button
 * Adafruit_LiquidCrystal
 * Wifi
+* PubSubClient
 
 ## Build
 There are a couple things you need to do so that you can compile the project. I converted this project to use [Platform IO](https://platformio.org/) so you will need to install it as well as an editor. I personally think that the Visual Studio code editor works very well with Platform IO.
@@ -87,6 +88,8 @@ There are a couple things you need to do so that you can compile the project. I 
 2. Edit the config.h and set the variables you want to change in this file.
 3. Make a copy of the mywifi.sample.h and rename it mywifi.h
 4. Edit the mywifi.h and set the ssid and password to match your wifi.
-5. Place the ESP8266 into flash mode
-6. Run the following command 
+5. Make a copy of the mymqttbroker.sample.h and rename it mymqttbroker.h
+6. Edit the mymqttbroker.h and set the specifics for your MQTT broker.
+7. Place the ESP8266 into flash mode
+8. Run the following command 
         pio run --target upload

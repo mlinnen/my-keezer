@@ -1,0 +1,1 @@
+This contains some windows batch files to send out MQTT messages to the keezer for testing purposes.  Since the MQTT broker needs a user name password you will need to copy the config.sample.ini to config.ini and edit the file with the IP, user name and password for the broker.  This keeps the secrets out of source control. 
