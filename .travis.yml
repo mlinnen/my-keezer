@@ -38,6 +38,7 @@ install:
 
 script:
     - cp src/config.sample.h src/config.h
+    - cp src/mywifi.sample.h src/mywifi.h
     - platformio ci -b huzzah src
 
 
