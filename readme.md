@@ -89,7 +89,7 @@ There are a couple things you need to do so that you can compile the project. I 
 3. Make a copy of the mywifi.sample.h and rename it mywifi.h
 4. Edit the mywifi.h and set the ssid and password to match your wifi.
 5. Make a copy of the mymqttbroker.sample.h and rename it mymqttbroker.h
-6. Edit the mymqttbroker.h and set the specifics for your MQTT broker.
+6. Edit the mymqttbroker.h and set the specifics for your MQTT broker and any topics you want to change.
 7. Place the ESP8266 into flash mode
 8. Run the following command 
         pio run --target upload
