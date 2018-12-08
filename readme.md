@@ -78,12 +78,15 @@ This application depends on the following libraries:
 * RBD_Timer
 * RBD_Button
 * Adafruit_LiquidCrystal
+* Wifi
 
 ## Build
 There are a couple things you need to do so that you can compile the project. I converted this project to use [Platform IO](https://platformio.org/) so you will need to install it as well as an editor. I personally think that the Visual Studio code editor works very well with Platform IO.
 
 1. Make a copy of the config.sample.h and rename it config.h
 2. Edit the config.h and set the variables you want to change in this file.
-3. Place the ESP8266 into flash mode
-4. Run the following command 
+3. Make a copy of the mywifi.sample.h and rename it mywifi.h
+4. Edit the mywifi.h and set the ssid and password to match your wifi.
+5. Place the ESP8266 into flash mode
+6. Run the following command 
         pio run --target upload
