@@ -4,17 +4,49 @@
 #include "TemperatureLCD.h"
 #include "ctype.h"
 #include "config.h"
+#include "mywifi.h"
+#include <ESP8266WiFi.h>
 
 TemperatureController *tempController;
 LightController *lightController;
+
+const char* ssid = WLAN_SSID;
+const char* password = WLAN_PASS;
+
+WiFiClient espClient;
+
+void setup_wifi() {
+
+  delay(10);
+  // We start by connecting to a WiFi network
+  Serial.println();
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
+
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  randomSeed(micros());
+
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+}
 
 void setup()
 {
   Serial.begin(9600);
 
-  // Delay a little bit so we can catch the serial port data during setup
+    // Delay a little bit so we can catch the serial port data during setup
   delay(5000);
 
+  setup_wifi();
+  
   tempController = new TemperatureController(
     16, 12, 
     DEFAULT_TEMPERATURE_SETPOINT_LOW, 
