@@ -92,67 +92,48 @@ boolean TemperatureController::loop()
 
     Serial.print("Avg Temp ");
     Serial.print(_averageCurrentTemp, 1);
-    publish(MQTT_TOPIC_TEMP_AVG, _averageCurrentTemp);
+    publishTemp(MQTT_TOPIC_TEMP_AVG, _averageCurrentTemp);
     Serial.println();
     Serial.print("Bot Temp ");
     Serial.print(_tempSensor->bottomTemperature(), 1);
-    publish(MQTT_TOPIC_TEMP_BOTTOM, _tempSensor->bottomTemperature());
+    publishTemp(MQTT_TOPIC_TEMP_BOTTOM, _tempSensor->bottomTemperature());
     Serial.println();
     Serial.print("Top Temp ");
     Serial.print(_tempSensor->topTemperature(), 1);
-    publish(MQTT_TOPIC_TEMP_TOP, _tempSensor->topTemperature());
+    publishTemp(MQTT_TOPIC_TEMP_TOP, _tempSensor->topTemperature());
     Serial.println();
 
     if (_averageCurrentTemp<_lowSetpoint) {
       _compressor = false;
       digitalWrite(_compressorRelayPin,HIGH);
-
-      _fan = false;
       digitalWrite(_fanRelayPin,HIGH);
     }
     if (_averageCurrentTemp>_highSetpoint) {
       _compressor = true;
       digitalWrite(_compressorRelayPin,LOW);
-
-      _fan = true;
       digitalWrite(_fanRelayPin,LOW);
     }
 
     if (_compressor) {Serial.println("Compressor On");}
     else {Serial.println("Compressor Off");}
 
-    if (_fan) {Serial.println("Fan On");}
-    else {Serial.println("Fan Off");}
-
     refreshLCD = true;
   }
 
   if (_publishTempTimer.isExpired())
   {
-    publish(MQTT_TOPIC_TEMP_AVG, _averageCurrentTemp);
-    publish(MQTT_TOPIC_TEMP_BOTTOM, _tempSensor->bottomTemperature());
-    publish(MQTT_TOPIC_TEMP_TOP, _tempSensor->topTemperature());
+    publishTemp(MQTT_TOPIC_TEMP_AVG, _averageCurrentTemp);
+    publishTemp(MQTT_TOPIC_TEMP_BOTTOM, _tempSensor->bottomTemperature());
+    publishTemp(MQTT_TOPIC_TEMP_TOP, _tempSensor->topTemperature());
     _publishTempTimer.restart();
   }
-
-  if (_compressor != _lastCompressor)
-  {
-    publish(MQTT_TOPIC_COMPRESSOR, _compressor);
-  }
-  _lastCompressor = _compressor;
-
-  if (_fan != _lastFan)
-  {
-    publish(MQTT_TOPIC_FAN, _fan);
-  }
-  _lastFan = _fan;
 
   if (refreshLCD) {_tempLCD->print();}
 
   return true;
 }
 
-void TemperatureController::publish(const char* topic, float temp)
+void TemperatureController::publishTemp(const char* topic, float temp)
 {
     if (_client.connected()) 
     {
@@ -161,18 +142,5 @@ void TemperatureController::publish(const char* topic, float temp)
       temp_str = String(temp);
       temp_str.toCharArray(message_buff, temp_str.length() + 1); 
       _client.publish(topic, message_buff);
-    }
-}
-
-void TemperatureController::publish(const char* topic, boolean compressor)
-{
-    if (_client.connected()) 
-    {
-      if (compressor) {
-        _client.publish(topic, "1");
-      }
-      else {
-        _client.publish(topic, "0");
-      }
     }
 }
