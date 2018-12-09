@@ -26,6 +26,7 @@ class TemperatureController
     int _compressorRelayPin;
     int _fanRelayPin;
     boolean _compressor;
+    boolean _lastCompressor;
     TemperatureSensor *_tempSensor;
     float _lowSetpoint = 0;
     float _highSetpoint = 0;
@@ -33,6 +34,7 @@ class TemperatureController
     PubSubClient _client;
     RBD::Timer _publishTempTimer;
     void publishTemp(const char* topic, float temp);
+    void publishCompressor(const char* topic, boolean compressor);
 };
 
 #endif

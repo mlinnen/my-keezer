@@ -13,4 +13,5 @@
 #define MQTT_TOPIC_TEMP_TOP     "/home/keezer/1/temp/top"    // The topic for the keezer top temperature sensor reading
 #define MQTT_TOPIC_TEMP_BOTTOM  "/home/keezer/1/temp/bottom" // The topic for the keezer bottom temperature sensor reading
 
-#define MQTT_TOPIC_MOTION       "/home/keezer/1/motion/value"  // The topic for the keezer average temperature reading
+#define MQTT_TOPIC_MOTION       "/home/keezer/1/motion/value"       // The topic for the keezer motion sensor
+#define MQTT_TOPIC_COMPRESSOR   "/home/keezer/1/compressor/value"   // The topic for the keezer compressor
