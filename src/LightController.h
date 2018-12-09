@@ -17,8 +17,9 @@ class LightController
     int _lightRelayPin;
     int _motionSensorPin;
     PubSubClient _client;
-    void publishMotion(const char* topic, boolean motion);
+    void publish(const char* topic, boolean value);
     boolean _lastMotion;
+    boolean _lastLight;
 };
 
 #endif
