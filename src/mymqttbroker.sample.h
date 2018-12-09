@@ -15,3 +15,4 @@
 
 #define MQTT_TOPIC_MOTION       "/home/keezer/1/motion/value"       // The topic for the keezer motion sensor
 #define MQTT_TOPIC_COMPRESSOR   "/home/keezer/1/compressor/value"   // The topic for the keezer compressor
+#define MQTT_TOPIC_FAN          "/home/keezer/2/fan/value"          // The topic for the keezer fan
