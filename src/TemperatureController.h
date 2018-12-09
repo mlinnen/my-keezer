@@ -30,9 +30,6 @@ class TemperatureController
     float _lowSetpoint = 0;
     float _highSetpoint = 0;
     float _averageCurrentTemp = 0;
-    PubSubClient _client;
-    RBD::Timer _publishTempTimer;
-    void publishTemp(const char* topic, float temp);
 };
 
 #endif

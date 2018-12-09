@@ -92,12 +92,15 @@ boolean TemperatureController::loop()
 
     Serial.print("Avg Temp ");
     Serial.print(_averageCurrentTemp, 1);
+    publishTemp(MQTT_TOPIC_TEMP_AVG, _averageCurrentTemp);
     Serial.println();
     Serial.print("Bot Temp ");
     Serial.print(_tempSensor->bottomTemperature(), 1);
+    publishTemp(MQTT_TOPIC_TEMP_BOTTOM, _tempSensor->bottomTemperature());
     Serial.println();
     Serial.print("Top Temp ");
     Serial.print(_tempSensor->topTemperature(), 1);
+    publishTemp(MQTT_TOPIC_TEMP_TOP, _tempSensor->topTemperature());
     Serial.println();
 
     if (_averageCurrentTemp<_lowSetpoint) {
