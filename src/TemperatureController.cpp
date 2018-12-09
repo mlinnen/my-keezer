@@ -21,6 +21,9 @@ void TemperatureController::setup()
   _tempSensor = new TemperatureSensor(false,1);
   _tempSensor->setup();
 
+  _publishTempTimer.setTimeout(DEFAULT_PUBLISH_TEMPERATURE_SECONDS * 1000);
+  _publishTempTimer.restart();
+
   pinMode(_compressorRelayPin, OUTPUT);
   pinMode(_fanRelayPin, OUTPUT);
   digitalWrite(_fanRelayPin, HIGH);
@@ -89,15 +92,12 @@ boolean TemperatureController::loop()
 
     Serial.print("Avg Temp ");
     Serial.print(_averageCurrentTemp, 1);
-    publishTemp(MQTT_TOPIC_TEMP_AVG, _averageCurrentTemp);
     Serial.println();
     Serial.print("Bot Temp ");
     Serial.print(_tempSensor->bottomTemperature(), 1);
-    publishTemp(MQTT_TOPIC_TEMP_BOTTOM, _tempSensor->bottomTemperature());
     Serial.println();
     Serial.print("Top Temp ");
     Serial.print(_tempSensor->topTemperature(), 1);
-    publishTemp(MQTT_TOPIC_TEMP_TOP, _tempSensor->topTemperature());
     Serial.println();
 
     if (_averageCurrentTemp<_lowSetpoint) {
@@ -115,6 +115,14 @@ boolean TemperatureController::loop()
     else {Serial.println("Compressor Off");}
 
     refreshLCD = true;
+  }
+
+  if (_publishTempTimer.isExpired())
+  {
+    publishTemp(MQTT_TOPIC_TEMP_AVG, _averageCurrentTemp);
+    publishTemp(MQTT_TOPIC_TEMP_BOTTOM, _tempSensor->bottomTemperature());
+    publishTemp(MQTT_TOPIC_TEMP_TOP, _tempSensor->topTemperature());
+    _publishTempTimer.restart();
   }
 
   if (refreshLCD) {_tempLCD->print();}
