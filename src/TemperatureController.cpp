@@ -128,6 +128,12 @@ boolean TemperatureController::loop()
     _publishTempTimer.restart();
   }
 
+  if (_compressor != _lastCompressor)
+  {
+    publishCompressor(MQTT_TOPIC_COMPRESSOR, _compressor);
+  }
+  _lastCompressor = _compressor;
+
   if (refreshLCD) {_tempLCD->print();}
 
   return true;
@@ -142,5 +148,18 @@ void TemperatureController::publishTemp(const char* topic, float temp)
       temp_str = String(temp);
       temp_str.toCharArray(message_buff, temp_str.length() + 1); 
       _client.publish(topic, message_buff);
+    }
+}
+
+void TemperatureController::publishCompressor(const char* topic, boolean compressor)
+{
+    if (_client.connected()) 
+    {
+      if (compressor) {
+        _client.publish(topic, "1");
+      }
+      else {
+        _client.publish(topic, "0");
+      }
     }
 }
