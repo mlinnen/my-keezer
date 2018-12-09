@@ -1,0 +1,1 @@
+python monitor.py -c "config.ini" -t /home/#
