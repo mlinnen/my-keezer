@@ -137,7 +137,7 @@ void setup()
     DEFAULT_TEMPERATURE_SETPOINT_LOW, 
     DEFAULT_TEMPERATURE_SETPOINT_HIGH,
     client);
-  lightController = new LightController(14,15);
+  lightController = new LightController(14,15,client);
 
   // Run the setup on the temparature controller
   tempController->setup();

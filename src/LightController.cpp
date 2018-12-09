@@ -2,10 +2,11 @@
 
 RBD::Timer timer;
 
-LightController::LightController(int motionSensorPin,int lightRelayPin)
+LightController::LightController(int motionSensorPin,int lightRelayPin, PubSubClient &client)
 {
     _motionSensorPin = motionSensorPin;
     _lightRelayPin = lightRelayPin;
+    _client = client;
 }
 
 void LightController::setup()
@@ -20,15 +21,35 @@ boolean LightController::loop()
     if (digitalRead(_motionSensorPin)){
         // Turn on the lights and start the timer
         digitalWrite(_lightRelayPin,LOW);
-        timer.setTimeout(120000);
+        if (_lastMotion==false) {
+            publishMotion(MQTT_TOPIC_MOTION,true);
+        }
+        timer.setTimeout(DEFAULT_MOTION_TIMEOUT_SECONDS);
         timer.restart();
+        _lastMotion = true;
     }
 
     if(timer.onExpired()) {
         // turn off the lights
         digitalWrite(_lightRelayPin,HIGH);
+        publishMotion(MQTT_TOPIC_MOTION,false);
+        _lastMotion = false;
     }
 
     return true;
 }
+
+void LightController::publishMotion(const char* topic, boolean motion)
+{
+    if (_client.connected()) 
+    {
+      if (motion) {
+        _client.publish(topic, "1");
+      }
+      else {
+        _client.publish(topic, "0");
+      }
+    }
+}
+
 
