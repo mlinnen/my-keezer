@@ -93,3 +93,64 @@ There are a couple things you need to do so that you can compile the project. I 
 7. Place the ESP8266 into flash mode
 8. Run the following command 
         pio run --target upload
+
+## MQTT
+The only way to communicate with the keezer is to use MQTT messages.  Currently the integration is mostly one way (keezer publishing messages to MQTT), but at some point you will be able to control aspects of the keezer by sending messages to it.  If you have never used MQTT before then I would advise you to head on over to [MQTT.org](http://mqtt.org/) to learn more about it.
+
+**Note:** This is a work in progress and I am likely going to re-factor these MQTT topics and message formats as I evolve the application over time.
+
+## Topics and Messages
+The Topics and Messages that the keezer uses will be defined here so that you have one place for determining how to interact with it.  You can also edit the mymqttbroker.h file to customize how you want your topics to be defined on the MQTT bus.  For instance not everyone will want their MQTT topics to start with /home/keezer like I have put together.  Hopefully this meets everyones needs on allowing the keezer to exist along with any other MQTT topics you have on your network.
+
+### MQTT Subscriptions
+The following subscriptions are supported by the keezer.
+
+#### Keezer ping
+This allows some external application to request what keezers are on the bus.  Each keezer will respond to this ping request.
+``` 
+/home/keezer/ping 
+```
+
+### MQTT Publications
+
+#### Keezer ping response
+In response to the ping request each keezer will publish the following.  Where {id} is the unique id (integer) of the keezer.  This allows for more than one keezer to exist on the bus.
+``` 
+/home/keezer/pingr/{id} 
+```
+
+#### Keezer temperatures
+The keezer will broadcast the current temperature readings.  Where {id} is the unique id (integer) of the keezer.  The body of the message contains a floating point number that represents Fahrenheit.  There are multiple temperature readings that the keezer tracks: Average, Top and Bottom. 
+``` 
+/home/keezer/{id}/temp/avg {float}
+/home/keezer/{id}/temp/top {float}
+/home/keezer/{id}/temp/bottom {float}
+```
+
+#### Keezer motion detection
+The keezer will broadcast the status of the motion detector when it changes.  Where {id} is the unique id (integer) of the keezer.  The body of the message contains a 1 or 0 indicating if there was motion detected (1) or motion has stopped being detected (0). 
+``` 
+/home/keezer/{id}/motion/value 1
+/home/keezer/{id}/motion/value 0
+```
+
+#### Keezer compressor status
+The keezer will broadcast when the compressor is turned on/off.  Where {id} is the unique id (integer) of the keezer.  The body of the message contains a 1 or 0 indicating if the compressor was turned on (1) or off (0).
+``` 
+/home/keezer/{id}/compressor/value 1
+/home/keezer/{id}/compressor/value 0
+```
+
+#### Keezer fan status
+The keezer will broadcast when the fan(s) is turned on/off.  Where {id} is the unique id (integer) of the keezer.  The body of the message contains a 1 or 0 indicating if the fan was turned on (1) or off (0).
+``` 
+/home/keezer/{id}/fan/value 1
+/home/keezer/{id}/fan/value 0
+```
+
+#### Keezer light status
+The keezer will broadcast when the light is turned on/off.  Where {id} is the unique id (integer) of the keezer.  The body of the message contains a 1 or 0 indicating if the light was turned on (1) or off (0).
+``` 
+/home/keezer/{id}/light/value 1
+/home/keezer/{id}/light/value 0
+```
