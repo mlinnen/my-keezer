@@ -15,8 +15,8 @@ void LightController::setup()
     pinMode(_lightRelayPin, OUTPUT);
     pinMode(_motionSensorPin, INPUT);
     digitalWrite(_lightRelayPin,HIGH);
-    motionTimer.setTimeout(DEFAULT_MOTION_TIMEOUT_SECONDS);
-    lightTimer.setTimeout(DEFAULT_LIGHT_ON_SECONDS);
+    motionTimer.setTimeout(DEFAULT_MOTION_TIMEOUT_SECONDS * 1000);
+    lightTimer.setTimeout(DEFAULT_LIGHT_ON_SECONDS * 1000);
 }
 
 boolean LightController::loop()
