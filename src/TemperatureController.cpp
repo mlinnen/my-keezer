@@ -160,19 +160,19 @@ void TemperatureController::publish(const char* topic, float temp)
       char message_buff[20];
       temp_str = String(temp);
       temp_str.toCharArray(message_buff, temp_str.length() + 1); 
-      _client.publish(topic, message_buff);
+      _client.publish(topic, message_buff, true);
     }
 }
 
-void TemperatureController::publish(const char* topic, boolean compressor)
+void TemperatureController::publish(const char* topic, boolean value)
 {
     if (_client.connected()) 
     {
-      if (compressor) {
-        _client.publish(topic, "1");
+      if (value) {
+        _client.publish(topic, "1", true);
       }
       else {
-        _client.publish(topic, "0");
+        _client.publish(topic, "0", true);
       }
     }
 }

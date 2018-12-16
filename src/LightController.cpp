@@ -56,10 +56,10 @@ void LightController::publish(const char* topic, boolean value)
     if (_client.connected()) 
     {
       if (value) {
-        _client.publish(topic, "1");
+        _client.publish(topic, "1", true);
       }
       else {
-        _client.publish(topic, "0");
+        _client.publish(topic, "0", true);
       }
     }
 }
