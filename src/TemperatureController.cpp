@@ -82,7 +82,11 @@ boolean TemperatureController::loop()
   if (_tempSensor->loop() == true)
   {
 
+    // Get the temperature readings
     _averageCurrentTemp = _tempSensor->averageTemperature();
+    _bottomCurrentTemp = _tempSensor->bottomTemperature();
+    _topCurrentTemp = _tempSensor->topTemperature();
+
     Serial.print("Hi  Setpoint ");
     Serial.println(highSetPointTemperature(), 1);
     Serial.print("Avg Setpoint ");
@@ -92,15 +96,12 @@ boolean TemperatureController::loop()
 
     Serial.print("Avg Temp ");
     Serial.print(_averageCurrentTemp, 1);
-    publish(MQTT_TOPIC_TEMP_AVG, _averageCurrentTemp);
     Serial.println();
     Serial.print("Bot Temp ");
-    Serial.print(_tempSensor->bottomTemperature(), 1);
-    publish(MQTT_TOPIC_TEMP_BOTTOM, _tempSensor->bottomTemperature());
+    Serial.print(_bottomCurrentTemp, 1);
     Serial.println();
     Serial.print("Top Temp ");
-    Serial.print(_tempSensor->topTemperature(), 1);
-    publish(MQTT_TOPIC_TEMP_TOP, _tempSensor->topTemperature());
+    Serial.print(_topCurrentTemp, 1);
     Serial.println();
 
     if (_averageCurrentTemp<_lowSetpoint) {
@@ -113,7 +114,7 @@ boolean TemperatureController::loop()
     }
 
     // Look at the difference between the top and bottom temperature sensor to determine when the fans should be on
-    if (abs(topTemperature()-bottomTemperature())>DEFAULT_TEMPERATURE_DELTA_FAN) { 
+    if (abs(_topCurrentTemp - _bottomCurrentTemp)>DEFAULT_TEMPERATURE_DELTA_FAN) { 
       _fan = true; 
       digitalWrite(_fanRelayPin,LOW);
     }
@@ -134,8 +135,8 @@ boolean TemperatureController::loop()
   if (_publishTempTimer.isExpired())
   {
     publish(MQTT_TOPIC_TEMP_AVG, _averageCurrentTemp);
-    publish(MQTT_TOPIC_TEMP_BOTTOM, _tempSensor->bottomTemperature());
-    publish(MQTT_TOPIC_TEMP_TOP, _tempSensor->topTemperature());
+    publish(MQTT_TOPIC_TEMP_BOTTOM, _bottomCurrentTemp);
+    publish(MQTT_TOPIC_TEMP_TOP, _topCurrentTemp);
     _publishTempTimer.restart();
   }
 
