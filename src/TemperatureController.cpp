@@ -106,9 +106,6 @@ boolean TemperatureController::loop()
     if (_averageCurrentTemp<_lowSetpoint) {
       _compressor = false;
       digitalWrite(_compressorRelayPin,HIGH);
-
-      _fan = false;
-      digitalWrite(_fanRelayPin,HIGH);
     }
     if (_averageCurrentTemp>_highSetpoint) {
       _compressor = true;
@@ -116,9 +113,14 @@ boolean TemperatureController::loop()
     }
 
     // Look at the difference between the top and bottom temperature sensor to determine when the fans should be on
-    if (abs(topTemperature()-bottomTemperature())>DEFAULT_TEMPERATURE_DELTA_FAN) { _fan = true; }
-    else { _fan=false; }
-    digitalWrite(_fanRelayPin,!_fan);
+    if (abs(topTemperature()-bottomTemperature())>DEFAULT_TEMPERATURE_DELTA_FAN) { 
+      _fan = true; 
+      digitalWrite(_fanRelayPin,LOW);
+    }
+    else { 
+      _fan=false; 
+      digitalWrite(_fanRelayPin,HIGH);
+    }
 
     if (_compressor) {Serial.println("Compressor On");}
     else {Serial.println("Compressor Off");}
