@@ -82,17 +82,17 @@ boolean TemperatureController::loop()
   if (_tempSensor->loop() == true)
   {
 
-    if (averageTemperature()<_lowSetpoint) {
+    if (this->averageTemperature()<_lowSetpoint) {
       _compressor = false;
       digitalWrite(_compressorRelayPin,HIGH);
     }
-    if (averageTemperature()>_highSetpoint) {
+    if (this->averageTemperature()>_highSetpoint) {
       _compressor = true;
       digitalWrite(_compressorRelayPin,LOW);
     }
 
     // Look at the difference between the top and bottom temperature sensor to determine when the fans should be on
-    float tempDelta = abs(topTemperature() - bottomTemperature());
+    float tempDelta = abs(this->topTemperature() - this->bottomTemperature());
     if (tempDelta>DEFAULT_TEMPERATURE_FAN_SETPOINT_HIGH) { 
       _fan = true; 
       digitalWrite(_fanRelayPin,LOW);
@@ -123,24 +123,24 @@ boolean TemperatureController::loop()
 
   if (_publishTempTimer.isExpired())
   {
-    publish(MQTT_TOPIC_TEMP_AVG, averageTemperature());
-    publish(MQTT_TOPIC_TEMP_BOTTOM, bottomTemperature());
-    publish(MQTT_TOPIC_TEMP_TOP, topTemperature());
+    publish(MQTT_TOPIC_TEMP_AVG, this->averageTemperature());
+    publish(MQTT_TOPIC_TEMP_BOTTOM, this->bottomTemperature());
+    publish(MQTT_TOPIC_TEMP_TOP, this->topTemperature());
     Serial.print("Hi  Setpoint ");
-    Serial.println(highSetPointTemperature(), 1);
+    Serial.println(this->highSetPointTemperature(), 1);
     Serial.print("Avg Setpoint ");
-    Serial.println(averageSetPointTemperature(), 1);
+    Serial.println(this->averageSetPointTemperature(), 1);
     Serial.print("Low Setpoint ");
-    Serial.println(lowSetPointTemperature(), 1);
+    Serial.println(this->lowSetPointTemperature(), 1);
 
     Serial.print("Avg Temp ");
-    Serial.print(averageTemperature(), 1);
+    Serial.print(this->averageTemperature(), 1);
     Serial.println();
     Serial.print("Bot Temp ");
-    Serial.print(bottomTemperature(), 1);
+    Serial.print(this->bottomTemperature(), 1);
     Serial.println();
     Serial.print("Top Temp ");
-    Serial.print(topTemperature(), 1);
+    Serial.print(this->topTemperature(), 1);
     Serial.println();
 
     _publishTempTimer.restart();
