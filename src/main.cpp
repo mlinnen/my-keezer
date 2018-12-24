@@ -133,7 +133,7 @@ void setup()
   client.setCallback(callback);
 
   tempController = new TemperatureController(
-    16, 12, 
+    12, 16, 
     DEFAULT_TEMPERATURE_SETPOINT_LOW, 
     DEFAULT_TEMPERATURE_SETPOINT_HIGH,
     client);

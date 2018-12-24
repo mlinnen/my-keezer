@@ -82,72 +82,69 @@ boolean TemperatureController::loop()
   if (_tempSensor->loop() == true)
   {
 
-    _averageCurrentTemp = _tempSensor->averageTemperature();
-    Serial.print("Hi  Setpoint ");
-    Serial.println(highSetPointTemperature(), 1);
-    Serial.print("Avg Setpoint ");
-    Serial.println(averageSetPointTemperature(), 1);
-    Serial.print("Low Setpoint ");
-    Serial.println(lowSetPointTemperature(), 1);
-
-    Serial.print("Avg Temp ");
-    Serial.print(_averageCurrentTemp, 1);
-    publish(MQTT_TOPIC_TEMP_AVG, _averageCurrentTemp);
-    Serial.println();
-    Serial.print("Bot Temp ");
-    Serial.print(_tempSensor->bottomTemperature(), 1);
-    publish(MQTT_TOPIC_TEMP_BOTTOM, _tempSensor->bottomTemperature());
-    Serial.println();
-    Serial.print("Top Temp ");
-    Serial.print(_tempSensor->topTemperature(), 1);
-    publish(MQTT_TOPIC_TEMP_TOP, _tempSensor->topTemperature());
-    Serial.println();
-
-    if (_averageCurrentTemp<_lowSetpoint) {
+    if (this->averageTemperature()<_lowSetpoint) {
       _compressor = false;
       digitalWrite(_compressorRelayPin,HIGH);
-
-      _fan = false;
-      digitalWrite(_fanRelayPin,HIGH);
     }
-    if (_averageCurrentTemp>_highSetpoint) {
+    if (this->averageTemperature()>_highSetpoint) {
       _compressor = true;
       digitalWrite(_compressorRelayPin,LOW);
     }
 
     // Look at the difference between the top and bottom temperature sensor to determine when the fans should be on
-    if (abs(topTemperature()-bottomTemperature())>DEFAULT_TEMPERATURE_DELTA_FAN) { _fan = true; }
-    else { _fan=false; }
-    digitalWrite(_fanRelayPin,!_fan);
+    float tempDelta = abs(this->topTemperature() - this->bottomTemperature());
+    if (tempDelta>DEFAULT_TEMPERATURE_FAN_SETPOINT_HIGH) { 
+      _fan = true; 
+      digitalWrite(_fanRelayPin,LOW);
+    }
+    if (tempDelta<DEFAULT_TEMPERATURE_FAN_SETPOINT_LOW) { 
+      _fan=false; 
+      digitalWrite(_fanRelayPin,HIGH);
+    }
 
-    if (_compressor) {Serial.println("Compressor On");}
-    else {Serial.println("Compressor Off");}
+    if (_compressor != _lastCompressor)
+    {
+      publish(MQTT_TOPIC_COMPRESSOR, _compressor);
+      if (_compressor) {Serial.println("Compressor On");}
+      else {Serial.println("Compressor Off");}
+    }
+    _lastCompressor = _compressor;
 
-    if (_fan) {Serial.println("Fan On");}
-    else {Serial.println("Fan Off");}
+    if (_fan != _lastFan)
+    {
+      publish(MQTT_TOPIC_FAN, _fan);
+      if (_fan) {Serial.println("Fan On");}
+      else {Serial.println("Fan Off");}
+    }
+    _lastFan = _fan;
 
     refreshLCD = true;
   }
 
   if (_publishTempTimer.isExpired())
   {
-    publish(MQTT_TOPIC_TEMP_AVG, _averageCurrentTemp);
-    publish(MQTT_TOPIC_TEMP_BOTTOM, _tempSensor->bottomTemperature());
-    publish(MQTT_TOPIC_TEMP_TOP, _tempSensor->topTemperature());
+    publish(MQTT_TOPIC_TEMP_AVG, this->averageTemperature());
+    publish(MQTT_TOPIC_TEMP_BOTTOM, this->bottomTemperature());
+    publish(MQTT_TOPIC_TEMP_TOP, this->topTemperature());
+    Serial.print("Hi  Setpoint ");
+    Serial.println(this->highSetPointTemperature(), 1);
+    Serial.print("Avg Setpoint ");
+    Serial.println(this->averageSetPointTemperature(), 1);
+    Serial.print("Low Setpoint ");
+    Serial.println(this->lowSetPointTemperature(), 1);
+
+    Serial.print("Avg Temp ");
+    Serial.print(this->averageTemperature(), 1);
+    Serial.println();
+    Serial.print("Bot Temp ");
+    Serial.print(this->bottomTemperature(), 1);
+    Serial.println();
+    Serial.print("Top Temp ");
+    Serial.print(this->topTemperature(), 1);
+    Serial.println();
+
     _publishTempTimer.restart();
   }
-
-  if (_compressor != _lastCompressor)
-  {
-    publish(MQTT_TOPIC_COMPRESSOR, _compressor);
-  }
-  _lastCompressor = _compressor;
-
-  if (_fan != _lastFan)
-  {
-    publish(MQTT_TOPIC_FAN, _fan);
-  }
-  _lastFan = _fan;
 
   if (refreshLCD) {_tempLCD->print();}
 
