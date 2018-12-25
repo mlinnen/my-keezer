@@ -26,9 +26,11 @@ boolean LightController::loop()
         digitalWrite(_lightRelayPin,LOW);
         if (_lastMotion==false) {
             publish(MQTT_TOPIC_MOTION,true);
+            Serial.println("Motion On");
         }
         if (_lastLight==false) {
             publish(MQTT_TOPIC_LIGHT,true);
+            Serial.println("Light On");
         }
         motionTimer.restart();
         lightTimer.restart();
@@ -38,6 +40,7 @@ boolean LightController::loop()
 
     if(motionTimer.onExpired()) {
         publish(MQTT_TOPIC_MOTION,false);
+        Serial.println("Motion Off");
         _lastMotion = false;
     }
 
@@ -45,6 +48,7 @@ boolean LightController::loop()
         // turn off the lights
         digitalWrite(_lightRelayPin,HIGH);
         publish(MQTT_TOPIC_LIGHT,false);
+        Serial.println("Light Off");
         _lastLight = false;
     }
 
