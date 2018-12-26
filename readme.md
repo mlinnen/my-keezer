@@ -83,19 +83,20 @@ This application depends on the following libraries:
 * Adafruit_LiquidCrystal
 * Wifi
 * PubSubClient
+* WifiManager
+* ArduinoJson
 
 ## Build
 There are a couple things you need to do so that you can compile the project. I converted this project to use [Platform IO](https://platformio.org/) so you will need to install it as well as an editor. I personally think that the Visual Studio code editor works very well with Platform IO.
 
-1. Make a copy of the config.sample.h and rename it config.h
-2. Edit the config.h and set the variables you want to change in this file.
-3. Make a copy of the mywifi.sample.h and rename it mywifi.h
-4. Edit the mywifi.h and set the ssid and password to match your wifi.
-5. Make a copy of the mymqttbroker.sample.h and rename it mymqttbroker.h
-6. Edit the mymqttbroker.h and set the specifics for your MQTT broker and any topics you want to change.
-7. Place the ESP8266 into flash mode
-8. Run the following command 
+1. Make a copy of the mymqttbroker.sample.h and rename it mymqttbroker.h
+2. Edit the mymqttbroker.h and set the specific topics that you want the keezer to use (or leave them as is).
+3. Place the ESP8266 into flash mode
+4. Run the following command 
         pio run --target upload
+5. The first time that the application is downloaded to the target platform it will put the device in an Access Point mode which will allow you to configure it for connection to your Wifi.
+6. Open your Wifi and connect to "keezer-ap"
+7. Click on the Wifi setup button and fill in the text fields.  Once the information is submitted the device will connect to Wifi and the MQTT broker.
 
 ## MQTT
 The only way to communicate with the keezer is to use MQTT messages.  Currently the integration is mostly one way (keezer publishing messages to MQTT), but at some point you will be able to control aspects of the keezer by sending messages to it.  If you have never used MQTT before then I would advise you to head on over to [MQTT.org](http://mqtt.org/) to learn more about it.

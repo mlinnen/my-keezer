@@ -135,7 +135,7 @@ void setup()
 
     WiFiManager wifiManager;
     //reset saved settings
-    //wifiManager.resetSettings(); // For testing
+    wifiManager.resetSettings(); // For testing
 
     // Setup some custom parameters to capture more details needed for connecting the keezer to MQTT
     char portstr[5];
