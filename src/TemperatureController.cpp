@@ -15,13 +15,13 @@ TemperatureController::TemperatureController(int compressorRelayPin,int fanRelay
   _client = client;
 }
 
-void TemperatureController::setup()
+void TemperatureController::setup(int publishTemperatureSeconds)
 {
   // Perform any onetime setup.
   _tempSensor = new TemperatureSensor(false,1);
   _tempSensor->setup();
 
-  _publishTempTimer.setTimeout(DEFAULT_PUBLISH_TEMPERATURE_SECONDS * 1000);
+  _publishTempTimer.setTimeout(publishTemperatureSeconds * 1000);
   _publishTempTimer.restart();
 
   pinMode(_compressorRelayPin, OUTPUT);
@@ -68,7 +68,7 @@ float TemperatureController::averageTemperature()
   return _tempSensor->averageTemperature();
 }
 
-boolean TemperatureController::loop()
+boolean TemperatureController::loop(float fanTemperatureLow, float fanTemperatureHigh)
 {
   boolean refreshLCD = false;
   // Was the mode button pressed and if so then increment the mode of the 
@@ -93,11 +93,11 @@ boolean TemperatureController::loop()
 
     // Look at the difference between the top and bottom temperature sensor to determine when the fans should be on
     float tempDelta = abs(this->topTemperature() - this->bottomTemperature());
-    if (tempDelta>DEFAULT_TEMPERATURE_FAN_SETPOINT_HIGH) { 
+    if (tempDelta>fanTemperatureHigh) { 
       _fan = true; 
       digitalWrite(_fanRelayPin,LOW);
     }
-    if (tempDelta<DEFAULT_TEMPERATURE_FAN_SETPOINT_LOW) { 
+    if (tempDelta<fanTemperatureLow) { 
       _fan=false; 
       digitalWrite(_fanRelayPin,HIGH);
     }

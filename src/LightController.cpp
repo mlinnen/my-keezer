@@ -10,13 +10,13 @@ LightController::LightController(int motionSensorPin,int lightRelayPin, PubSubCl
     _client = client;
 }
 
-void LightController::setup()
+void LightController::setup(int motionTimeOutSeconds, int lightOnSeconds)
 {
     pinMode(_lightRelayPin, OUTPUT);
     pinMode(_motionSensorPin, INPUT);
     digitalWrite(_lightRelayPin,HIGH);
-    motionTimer.setTimeout(DEFAULT_MOTION_TIMEOUT_SECONDS * 1000);
-    lightTimer.setTimeout(DEFAULT_LIGHT_ON_SECONDS * 1000);
+    motionTimer.setTimeout(motionTimeOutSeconds * 1000);
+    lightTimer.setTimeout(lightOnSeconds * 1000);
 }
 
 boolean LightController::loop()

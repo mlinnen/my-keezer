@@ -1,20 +1,19 @@
 #ifndef TemperatureController_h
 #define TemperatureController_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 #include "TemperatureSensor.h"
 #include <RBD_Button.h>
 #include <RBD_Timer.h>
 #include <PubSubClient.h>
 #include "mymqttbroker.h"
-#include "config.h"
 
 class TemperatureController
 {
   public:
     TemperatureController(int compressorRelayPin, int fanRelayPin, float lowSetpoint, float highSetpoint, PubSubClient &client);
-    void setup();
-    boolean loop();
+    void setup(int publishTemperatureSeconds);
+    boolean loop(float fanTemperatureLow, float fanTemperatureHigh);
     float highSetPointTemperature();
     float averageSetPointTemperature();
     float lowSetPointTemperature();

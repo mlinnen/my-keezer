@@ -11,7 +11,7 @@ class LightController
 {
   public:
     LightController(int motionSensorPin,int lightRelayPin, PubSubClient &client);
-    void setup();
+    void setup(int motionTimeOutSeconds, int lightOnSeconds);
     boolean loop();
   private:
     int _lightRelayPin;
