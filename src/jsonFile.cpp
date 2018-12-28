@@ -1,9 +1,8 @@
 
-#include <FS.h>
-#include "JsonFileConfig.h"
+#include "jsonFile.h"
 
 // Loads the configuration from a file
-void JsonFileConfig::loadConfiguration(const char *filename, Config &config) {
+void jsonfile_load(const char *filename, Config &config) {
   
   // Open file for reading
   File file = SPIFFS.open(filename, "r");
@@ -49,7 +48,7 @@ void JsonFileConfig::loadConfiguration(const char *filename, Config &config) {
 }
 
 // Saves the configuration to a file
-void JsonFileConfig::saveConfiguration(const char *filename, const Config &config) {
+void jsonfile_save(const char *filename, const Config &config) {
   // Delete existing file, otherwise the configuration is appended to the file
 
   // Open file for writing
@@ -90,7 +89,7 @@ void JsonFileConfig::saveConfiguration(const char *filename, const Config &confi
 }
 
 // Prints the content of a file to the Serial
-void JsonFileConfig::printFile(const char *filename) {
+void jsonfile_print(const char *filename) {
   // Open file for reading
   File file = SPIFFS.open(filename, "r");
   if (!file) {
