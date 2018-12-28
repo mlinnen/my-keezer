@@ -1,5 +1,5 @@
-#ifndef WIFI_H
-#define WIFI_H
+#ifndef KEEZER_WIFI_H
+#define KEEZER_WIFI_H
 
 #include "config.h" 
 #include <ESP8266WiFi.h>
@@ -8,8 +8,8 @@
 #include <WiFiManager.h>
 #include <RBD_Timer.h>
 
-void wifi_setup(Config &config);
-void wifi_reconnect(Config &config);
+void keezerwifi_setup(Config &config);
+void keezerwifi_reconnect(Config &config);
 
 
 #endif

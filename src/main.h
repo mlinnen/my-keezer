@@ -3,7 +3,7 @@
 
 #include "Arduino.h"
 #include "config.h"
-#include "wifi.h"
+#include "keezerwifi.h"
 #include "mqtt.h"
 #include "jsonFile.h"
 #include "TemperatureController.h"

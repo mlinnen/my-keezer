@@ -1,9 +1,9 @@
-#include "wifi.h"
+#include "keezerwifi.h"
 
 RBD::Timer _wifiConnectTimer;
 
 
-void wifi_setup(Config &config) {
+void keezerwifi_setup(Config &config) {
 
     WiFiManager wifiManager;
     //reset saved settings
@@ -35,7 +35,7 @@ void wifi_setup(Config &config) {
 
 }
 
-void wifi_reconnect(Config &config) {
+void keezerwifi_reconnect(Config &config) {
   if (WiFi.status() == WL_CONNECTED)
   {
     return;
