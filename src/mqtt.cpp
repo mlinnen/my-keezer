@@ -51,10 +51,12 @@ void mqtt_subscribe() {
 }
 
 void mqtt_publish() {
-
+    
+    lightcontroller_publish(mqttClient);
+    temperaturecontroller_publish(mqttClient);
 }
 
 void mqtt_loop(Config &config) {
-    
+
 }
 

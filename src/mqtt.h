@@ -5,6 +5,8 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include "config.h" 
+#include "LightController.h"
+#include "TemperatureController.h"
 
 void mqtt_setup(Config &config);
 void mqtt_loop(Config &config);

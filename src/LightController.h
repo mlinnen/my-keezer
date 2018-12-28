@@ -7,19 +7,11 @@
 #include "mymqttbroker.h"
 #include "config.h"
 
-class LightController
-{
-  public:
-    LightController(int motionSensorPin,int lightRelayPin, PubSubClient &client);
-    void setup(int motionTimeOutSeconds, int lightOnSeconds);
-    boolean loop();
-  private:
-    int _lightRelayPin;
-    int _motionSensorPin;
-    PubSubClient _client;
-    void publish(const char* topic, boolean value);
-    boolean _lastMotion;
-    boolean _lastLight;
-};
+#define MOTION_SENSOR_PIN 14
+#define LIGHT_RELAY_PIN 15
+
+void lightcontroller_setup(int motionTimeOutSeconds, int lightOnSeconds);
+boolean lightcontroller_loop();
+void lightcontroller_publish(PubSubClient &mqttClient);
 
 #endif

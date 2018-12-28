@@ -1,10 +1,13 @@
 #include "wifi.h"
 
+RBD::Timer _wifiConnectTimer;
+
+
 void wifi_setup(Config &config) {
 
     WiFiManager wifiManager;
     //reset saved settings
-    wifiManager.resetSettings(); // For testing
+    //wifiManager.resetSettings(); // For testing
 
     // Setup some custom parameters to capture more details needed for connecting the keezer to MQTT
     char portstr[5];
@@ -33,25 +36,24 @@ void wifi_setup(Config &config) {
 }
 
 void wifi_reconnect(Config &config) {
-  //if (!_initialSetup && !_wifiConnectTimer.isExpired())
-  //{
-  //  return;
-  //}
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    return;
+  }
+  if (!_wifiConnectTimer.isExpired())
+  {
+    return;
+  }
   delay(10);
   // We start by connecting to a WiFi network
   Serial.println();
   Serial.print("Connecting to ");
-  //Serial.println(ssid);
+  Serial.println(config.wifi_ssid);
 
-  //WiFi.begin(ssid, password);
+  WiFi.begin(config.wifi_ssid, config.wifi_password);
 
-  int numberOfTries = 10;
-  //if (!_initialSetup)
-  //{
-    numberOfTries = 1;
-  //}
   int count = 0;
-  while (count < numberOfTries) {
+  while (count < 10) {
     if (WiFi.status() == WL_CONNECTED){ break;}
     delay(500);
     Serial.print(".");
@@ -68,7 +70,7 @@ void wifi_reconnect(Config &config) {
   else
   {
     Serial.println("Unable to connect to WiFi but will try again later");
-    //_wifiConnectTimer.restart();
+    _wifiConnectTimer.restart();
   }
 
 }

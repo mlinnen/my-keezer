@@ -3,33 +3,31 @@
 RBD::Timer motionTimer;
 RBD::Timer lightTimer;
 
-LightController::LightController(int motionSensorPin,int lightRelayPin, PubSubClient &client)
-{
-    _motionSensorPin = motionSensorPin;
-    _lightRelayPin = lightRelayPin;
-    _client = client;
-}
+boolean _publishLight = false;
+boolean _publishMotion = false;
+boolean _lastMotion;
+boolean _lastLight;
 
-void LightController::setup(int motionTimeOutSeconds, int lightOnSeconds)
+void lightcontroller_setup(int motionTimeOutSeconds, int lightOnSeconds)
 {
-    pinMode(_lightRelayPin, OUTPUT);
-    pinMode(_motionSensorPin, INPUT);
-    digitalWrite(_lightRelayPin,HIGH);
+    pinMode(LIGHT_RELAY_PIN, OUTPUT);
+    pinMode(MOTION_SENSOR_PIN, INPUT);
+    digitalWrite(LIGHT_RELAY_PIN,HIGH);
     motionTimer.setTimeout(motionTimeOutSeconds * 1000);
     lightTimer.setTimeout(lightOnSeconds * 1000);
 }
 
-boolean LightController::loop()
+boolean lightcontroller_loop()
 {
-    if (digitalRead(_motionSensorPin)){
+    if (digitalRead(MOTION_SENSOR_PIN)){
         // Turn on the lights and start the timers
-        digitalWrite(_lightRelayPin,LOW);
+        digitalWrite(LIGHT_RELAY_PIN,LOW);
         if (_lastMotion==false) {
-            publish(MQTT_TOPIC_MOTION,true);
+            _publishMotion = true;
             Serial.println("Motion On");
         }
         if (_lastLight==false) {
-            publish(MQTT_TOPIC_LIGHT,true);
+            _publishLight = true;
             Serial.println("Light On");
         }
         motionTimer.restart();
@@ -39,15 +37,15 @@ boolean LightController::loop()
     }
 
     if(motionTimer.onExpired()) {
-        publish(MQTT_TOPIC_MOTION,false);
+        _publishMotion = true;
         Serial.println("Motion Off");
         _lastMotion = false;
     }
 
     if(lightTimer.onExpired()) {
         // turn off the lights
-        digitalWrite(_lightRelayPin,HIGH);
-        publish(MQTT_TOPIC_LIGHT,false);
+        digitalWrite(LIGHT_RELAY_PIN,HIGH);
+        _publishLight = true;
         Serial.println("Light Off");
         _lastLight = false;
     }
@@ -55,16 +53,26 @@ boolean LightController::loop()
     return true;
 }
 
-void LightController::publish(const char* topic, boolean value)
+void lightcontroller_publish(PubSubClient &mqttClient)
 {
-    if (_client.connected()) 
+    if (mqttClient.connected()) 
     {
-      if (value) {
-        _client.publish(topic, "1", true);
-      }
-      else {
-        _client.publish(topic, "0", true);
-      }
+        if (_publishLight)
+        {
+            if (_lastLight)
+                mqttClient.publish(MQTT_TOPIC_LIGHT,"1",true);
+            else
+                mqttClient.publish(MQTT_TOPIC_LIGHT,"0",true);
+            _publishLight = false;
+        }
+        if (_publishMotion)
+        {
+            if (_lastMotion)
+                mqttClient.publish(MQTT_TOPIC_MOTION,"1",true);
+            else
+                mqttClient.publish(MQTT_TOPIC_MOTION,"0",true);
+            _publishMotion = false;
+        }
     }
 }
 

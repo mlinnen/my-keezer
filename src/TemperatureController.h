@@ -3,38 +3,20 @@
 
 #include <Arduino.h>
 #include "TemperatureSensor.h"
+#include "TemperatureLCD.h"
 #include <RBD_Button.h>
 #include <RBD_Timer.h>
 #include <PubSubClient.h>
 #include "mymqttbroker.h"
 
-class TemperatureController
-{
-  public:
-    TemperatureController(int compressorRelayPin, int fanRelayPin, float lowSetpoint, float highSetpoint, PubSubClient &client);
-    void setup(int publishTemperatureSeconds);
-    boolean loop(float fanTemperatureLow, float fanTemperatureHigh);
-    float highSetPointTemperature();
-    float averageSetPointTemperature();
-    float lowSetPointTemperature();
-    float topTemperature();
-    float bottomTemperature();
-    float averageTemperature();
-    boolean compressor();
-  private:
-    int _compressorRelayPin;
-    int _fanRelayPin;
-    boolean _compressor = false;
-    boolean _lastCompressor;
-    boolean _fan = false;
-    boolean _lastFan;
-    TemperatureSensor *_tempSensor;
-    float _lowSetpoint = 0;
-    float _highSetpoint = 0;
-    PubSubClient _client;
-    RBD::Timer _publishTempTimer;
-    void publish(const char* topic, float temp);
-    void publish(const char* topic, boolean compressor);
-};
+void temperaturecontroller_setup(float lowSetpoint, float highSetpoint, int publishTemperatureSeconds);
+boolean temperaturecontroller_loop(float fanTemperatureLow, float fanTemperatureHigh);
+float temperaturecontroller_highSetPointTemperature();
+float temperaturecontroller_averageSetPointTemperature();
+float temperaturecontroller_lowSetPointTemperature();
+boolean temperaturecontroller_compressor();
+void temperaturecontroller_publish(PubSubClient &mqttClient);
+void temperaturecontroller_publish(PubSubClient &mqttClient, const char* topic, float temp);
+void temperaturecontroller_publish(PubSubClient &mqttClient, const char* topic, boolean value);
 
 #endif

@@ -6,23 +6,11 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-class TemperatureSensor
-{
-  public:
-    TemperatureSensor(boolean celsius, int frequencySeconds);
-    void setup();
-    boolean loop();
-    float topTemperature();
-    float averageTemperature();
-    float bottomTemperature();
+void temperaturesensor_setup(boolean celsius, int frequencySeconds);
+boolean temperaturesensor_loop();
+float temperaturesensor_topTemperature();
+float temperaturesensor_averageTemperature();
+float temperaturesensor_bottomTemperature();
 
-  private:
-    RBD::Timer _frequencyTimer;
-    int _frequencySeconds;
-    boolean _celsius;
-    float _topTempearture;
-    float _bottomTempearture;
-    void printAddress(DeviceAddress deviceAddress);
-};
 
 #endif

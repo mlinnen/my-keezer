@@ -1,110 +1,100 @@
 #include "TemperatureController.h"
-#include "TemperatureSensor.h"
-#include "TemperatureLCD.h"
 
-TemperatureLCD *_tempLCD;
+#define COMPRESSOR_RELAY_PIN 12
+#define FAN_RELAY_PIN 16
+
 RBD::Button _modeButton(13);
 
-TemperatureController::TemperatureController(int compressorRelayPin,int fanRelayPin, float lowSetpoint, float highSetpoint, PubSubClient &client)
+boolean _compressor = false;
+boolean _lastCompressor;
+boolean _fan = false;
+boolean _lastFan;
+float _lowSetpoint = 0;
+float _highSetpoint = 0;
+boolean _publishTemperature = false;
+boolean _publishCompressor = false;
+boolean _publishFan = false;
+RBD::Timer _publishTempTimer;
+void publish(const char* topic, float temp);
+void publish(const char* topic, boolean compressor);
+
+void temperaturecontroller_setup(float lowSetpoint, float highSetpoint, int publishTemperatureSeconds)
 {
   _lowSetpoint = lowSetpoint;
   _highSetpoint = highSetpoint;
-  _compressorRelayPin = compressorRelayPin;
-  _fanRelayPin = fanRelayPin;
-  _tempLCD = new TemperatureLCD(this);
-  _client = client;
-}
 
-void TemperatureController::setup(int publishTemperatureSeconds)
-{
   // Perform any onetime setup.
-  _tempSensor = new TemperatureSensor(false,1);
-  _tempSensor->setup();
+  temperaturesensor_setup(false,1);
 
   _publishTempTimer.setTimeout(publishTemperatureSeconds * 1000);
   _publishTempTimer.restart();
 
-  pinMode(_compressorRelayPin, OUTPUT);
-  pinMode(_fanRelayPin, OUTPUT);
-  digitalWrite(_fanRelayPin, HIGH);
-  digitalWrite(_compressorRelayPin, HIGH);
+  pinMode(COMPRESSOR_RELAY_PIN, OUTPUT);
+  pinMode(FAN_RELAY_PIN, OUTPUT);
+  digitalWrite(FAN_RELAY_PIN, HIGH);
+  digitalWrite(COMPRESSOR_RELAY_PIN, HIGH);
   
-  _tempLCD->setup();
+  temperaturelcd_setup();
 
 }
 
-boolean TemperatureController::compressor()
+boolean temperaturecontroller_compressor()
 {
   return _compressor;
 }
 
-float TemperatureController::averageSetPointTemperature()
+float temperaturecontroller_averageSetPointTemperature()
 {
   return (_lowSetpoint + _highSetpoint)/2;
 }
 
-float TemperatureController::lowSetPointTemperature()
+float temperaturecontroller_lowSetPointTemperature()
 {
   return _lowSetpoint;
 }
 
-float TemperatureController::highSetPointTemperature()
+float temperaturecontroller_highSetPointTemperature()
 {
   return _highSetpoint;
 }
 
-float TemperatureController::topTemperature()
-{
-  return _tempSensor->topTemperature();
-}
-
-float TemperatureController::bottomTemperature()
-{
-  return _tempSensor->bottomTemperature();
-}
-
-float TemperatureController::averageTemperature()
-{
-  return _tempSensor->averageTemperature();
-}
-
-boolean TemperatureController::loop(float fanTemperatureLow, float fanTemperatureHigh)
+boolean temperaturecontroller_loop(float fanTemperatureLow, float fanTemperatureHigh)
 {
   boolean refreshLCD = false;
   // Was the mode button pressed and if so then increment the mode of the 
   if (_modeButton.onPressed())
   {
-    _tempLCD->changeMode();
+    temperaturelcd_changeMode();
     refreshLCD = true;
   }
 
   // This is the service loop that is called from the main program and will update the state of this component.
-  if (_tempSensor->loop() == true)
+  if (temperaturesensor_loop() == true)
   {
 
-    if (this->averageTemperature()<_lowSetpoint) {
+    if (temperaturesensor_averageTemperature()<_lowSetpoint) {
       _compressor = false;
-      digitalWrite(_compressorRelayPin,HIGH);
+      digitalWrite(COMPRESSOR_RELAY_PIN,HIGH);
     }
-    if (this->averageTemperature()>_highSetpoint) {
+    if (temperaturesensor_averageTemperature()>_highSetpoint) {
       _compressor = true;
-      digitalWrite(_compressorRelayPin,LOW);
+      digitalWrite(COMPRESSOR_RELAY_PIN,LOW);
     }
 
     // Look at the difference between the top and bottom temperature sensor to determine when the fans should be on
-    float tempDelta = abs(this->topTemperature() - this->bottomTemperature());
+    float tempDelta = abs(temperaturesensor_topTemperature() - temperaturesensor_bottomTemperature());
     if (tempDelta>fanTemperatureHigh) { 
       _fan = true; 
-      digitalWrite(_fanRelayPin,LOW);
+      digitalWrite(FAN_RELAY_PIN,LOW);
     }
     if (tempDelta<fanTemperatureLow) { 
       _fan=false; 
-      digitalWrite(_fanRelayPin,HIGH);
+      digitalWrite(FAN_RELAY_PIN,HIGH);
     }
 
     if (_compressor != _lastCompressor)
     {
-      publish(MQTT_TOPIC_COMPRESSOR, _compressor);
+      _publishCompressor = true;
       if (_compressor) {Serial.println("Compressor On");}
       else {Serial.println("Compressor Off");}
     }
@@ -112,7 +102,7 @@ boolean TemperatureController::loop(float fanTemperatureLow, float fanTemperatur
 
     if (_fan != _lastFan)
     {
-      publish(MQTT_TOPIC_FAN, _fan);
+      _publishFan = true;
       if (_fan) {Serial.println("Fan On");}
       else {Serial.println("Fan Off");}
     }
@@ -123,55 +113,73 @@ boolean TemperatureController::loop(float fanTemperatureLow, float fanTemperatur
 
   if (_publishTempTimer.isExpired())
   {
-    publish(MQTT_TOPIC_TEMP_AVG, this->averageTemperature());
-    publish(MQTT_TOPIC_TEMP_BOTTOM, this->bottomTemperature());
-    publish(MQTT_TOPIC_TEMP_TOP, this->topTemperature());
+    _publishTemperature = true;
     Serial.print("Hi  Setpoint ");
-    Serial.println(this->highSetPointTemperature(), 1);
+    Serial.println(temperaturecontroller_highSetPointTemperature(), 1);
     Serial.print("Avg Setpoint ");
-    Serial.println(this->averageSetPointTemperature(), 1);
+    Serial.println(temperaturecontroller_averageSetPointTemperature(), 1);
     Serial.print("Low Setpoint ");
-    Serial.println(this->lowSetPointTemperature(), 1);
+    Serial.println(temperaturecontroller_lowSetPointTemperature(), 1);
 
     Serial.print("Avg Temp ");
-    Serial.print(this->averageTemperature(), 1);
+    Serial.print(temperaturesensor_averageTemperature(), 1);
     Serial.println();
     Serial.print("Bot Temp ");
-    Serial.print(this->bottomTemperature(), 1);
+    Serial.print(temperaturesensor_bottomTemperature(), 1);
     Serial.println();
     Serial.print("Top Temp ");
-    Serial.print(this->topTemperature(), 1);
+    Serial.print(temperaturesensor_topTemperature(), 1);
     Serial.println();
 
     _publishTempTimer.restart();
   }
 
-  if (refreshLCD) {_tempLCD->print();}
+  if (refreshLCD) {temperaturelcd_print();}
 
   return true;
 }
 
-void TemperatureController::publish(const char* topic, float temp)
+void temperaturecontroller_publish(PubSubClient &mqttClient) {
+
+  if (_publishCompressor) {
+    temperaturecontroller_publish(mqttClient, MQTT_TOPIC_COMPRESSOR, _compressor);
+    _publishCompressor = false;
+  }
+
+  if (_publishFan) {
+    temperaturecontroller_publish(mqttClient, MQTT_TOPIC_FAN, _fan);
+    _publishFan = false;
+  }
+
+  if (_publishTemperature) {
+    temperaturecontroller_publish(mqttClient, MQTT_TOPIC_TEMP_AVG, temperaturesensor_averageTemperature());
+    temperaturecontroller_publish(mqttClient, MQTT_TOPIC_TEMP_BOTTOM, temperaturesensor_bottomTemperature());
+    temperaturecontroller_publish(mqttClient, MQTT_TOPIC_TEMP_TOP, temperaturesensor_topTemperature());
+    _publishTemperature = false;
+  }
+}
+
+void temperaturecontroller_publish(PubSubClient &mqttClient, const char* topic, float temp)
 {
-    if (_client.connected()) 
+    if (mqttClient.connected()) 
     {
       String temp_str; 
       char message_buff[20];
       temp_str = String(temp);
       temp_str.toCharArray(message_buff, temp_str.length() + 1); 
-      _client.publish(topic, message_buff, true);
+      mqttClient.publish(topic, message_buff, true);
     }
 }
 
-void TemperatureController::publish(const char* topic, boolean value)
+void temperaturecontroller_publish(PubSubClient &mqttClient, const char* topic, boolean value)
 {
-    if (_client.connected()) 
+    if (mqttClient.connected()) 
     {
       if (value) {
-        _client.publish(topic, "1", true);
+        mqttClient.publish(topic, "1", true);
       }
       else {
-        _client.publish(topic, "0", true);
+        mqttClient.publish(topic, "0", true);
       }
     }
 }

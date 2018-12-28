@@ -6,6 +6,7 @@
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>
+#include <RBD_Timer.h>
 
 void wifi_setup(Config &config);
 void wifi_reconnect(Config &config);

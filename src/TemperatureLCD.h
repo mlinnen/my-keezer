@@ -5,17 +5,12 @@
 #include "Wire.h"
 #include "Adafruit_LiquidCrystal.h"
 #include "TemperatureController.h"
+#include "TemperatureSensor.h"
 
-class TemperatureLCD
-{
-  public:
-    TemperatureLCD(TemperatureController *tempController);
-    void setup();
-    void changeMode();
-    void print();
-  private:
-    int _mode;
-    int _lastMode;
-};
+void temperaturelcd_setup();
+void temperaturelcd_changeMode();
+void temperaturelcd_print();
+void temperaturelcd_printText(int mode);
+void temperaturelcd_printVariables(int mode);
 
 #endif
