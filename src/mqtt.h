@@ -11,8 +11,8 @@
 void mqtt_setup(Config &config);
 void mqtt_loop(Config &config);
 void mqtt_callback(char* topic, byte* payload, unsigned int length);
+void mqtt_message_handler(String topic, String message);
 void mqtt_reconnect(Config &config);
 void mqtt_subscribe();
 void mqtt_publish();
-
 #endif

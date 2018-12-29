@@ -13,15 +13,21 @@ void mqtt_setup(Config &config)
   _mqttReconnectTimer.setTimeout(30000);
 }
 
-void mqtt_callback(char* topic, byte* payload, unsigned int length) {
+void mqtt_callback(char* intopic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
-  Serial.print(topic);
+  Serial.print(intopic);
   Serial.print("] ");
+
+  String topic = intopic;
+  String message = "";
+
   for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
+    message.concat((char)payload[i]);
   }
-  Serial.println();
-  
+  Serial.println(message);
+
+  mqtt_message_handler(topic, message);
+  // TODO other callbacks for handling messages
 }
 
 void mqtt_reconnect(Config &config) {
@@ -62,5 +68,12 @@ void mqtt_publish() {
 
 void mqtt_loop(Config &config) {
     mqtt_reconnect(config);
+    mqttClient.loop();
+}
+
+void mqtt_message_handler(String topic, String message) {
+  if (topic.equalsIgnoreCase(MQTT_TOPIC_PING)){
+    mqttClient.publish(MQTT_TOPIC_PINGR, " ");
+  }
 }
 
