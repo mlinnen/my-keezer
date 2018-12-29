@@ -19,4 +19,5 @@ void temperaturecontroller_publish(PubSubClient &mqttClient);
 void temperaturecontroller_publish(PubSubClient &mqttClient, const char* topic, float temp);
 void temperaturecontroller_publish(PubSubClient &mqttClient, const char* topic, boolean value);
 
+
 #endif
