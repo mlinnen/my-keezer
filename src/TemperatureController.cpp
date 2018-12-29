@@ -1,4 +1,4 @@
-#include "TemperatureController.h"
+#include "temperatureController.h"
 
 #define COMPRESSOR_RELAY_PIN 12
 #define FAN_RELAY_PIN 16
