@@ -6,7 +6,7 @@
 #include <PubSubClient.h>
 #include "config.h" 
 #include "LightController.h"
-#include "TemperatureController.h"
+#include "temperatureController.h"
 
 void mqtt_setup(Config &config);
 void mqtt_loop(Config &config);
