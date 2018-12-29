@@ -36,7 +36,7 @@ install:
     - pip install -U platformio
 
 script:
-    - cp src/mymqttbroker.sample.h src/mymqttbroker.h
+    - cp src/myconfig.sample.h src/myconfig.h
     - platformio run
 
 

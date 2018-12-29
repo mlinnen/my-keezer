@@ -1,6 +1,7 @@
 #ifndef Config_h
 #define Config_h
 
+#include "myconfig.h"
 
 struct Config {
   char mqtt_server[64];

@@ -4,7 +4,6 @@
 #include "Arduino.h"
 #include <RBD_Timer.h>
 #include <PubSubClient.h>
-#include "mymqttbroker.h"
 #include "config.h"
 
 #define MOTION_SENSOR_PIN 14

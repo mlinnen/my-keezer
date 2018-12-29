@@ -20,13 +20,13 @@ void jsonfile_load(const char *filename, Config &config) {
 
   // Copy values from the JsonObject to the Config
   config.mqtt_port = root["mport"] | 1883;
-  config.publish_temperature_seconds = root["pubTempSecs"] | 15;
-  config.temperature_set_point_low = root["tempLow"] | 38.0;
-  config.temperature_set_point_high = root["tempHigh"] | 40.0;
-  config.motion_timeout_seconds = root["motionSecs"] | 30;
-  config.light_on_seconds = root["lightSecs"] | 120;
-  config.temperature_fan_set_point_low = root["fanTempLow"] | 8.0;
-  config.temperature_fan_set_point_high = root["fanTempHigh"] | 10.0;
+  config.publish_temperature_seconds = root["pubTempSecs"] | DEFAULT_PUBLISH_TEMPERATURE_SECONDS;
+  config.temperature_set_point_low = root["tempLow"] | DEFAULT_TEMPERATURE_SETPOINT_LOW;
+  config.temperature_set_point_high = root["tempHigh"] | DEFAULT_TEMPERATURE_SETPOINT_HIGH;
+  config.motion_timeout_seconds = root["motionSecs"] | DEFAULT_MOTION_TIMEOUT_SECONDS;
+  config.light_on_seconds = root["lightSecs"] | DEFAULT_LIGHT_ON_SECONDS;
+  config.temperature_fan_set_point_low = root["fanTempLow"] | DEFAULT_TEMPERATURE_FAN_SETPOINT_LOW;
+  config.temperature_fan_set_point_high = root["fanTempHigh"] | DEFAULT_TEMPERATURE_FAN_SETPOINT_HIGH;
   strlcpy(config.mqtt_server,                   // <- destination
           root["mserver"] | "",                 // <- source
           sizeof(config.mqtt_server));          // <- destination's capacity

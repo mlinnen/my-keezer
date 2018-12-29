@@ -7,7 +7,7 @@
 #include <RBD_Button.h>
 #include <RBD_Timer.h>
 #include <PubSubClient.h>
-#include "mymqttbroker.h"
+#include "config.h"
 
 void temperaturecontroller_setup(float lowSetpoint, float highSetpoint, int publishTemperatureSeconds);
 boolean temperaturecontroller_loop(float fanTemperatureLow, float fanTemperatureHigh);
