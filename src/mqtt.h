@@ -2,7 +2,7 @@
 #define MQTT_H
 
 #include "Arduino.h"
-#include <WifiManager.h>
+#include <WiFiManager.h>
 #include <PubSubClient.h>
 #include "config.h" 
 #include "LightController.h"
