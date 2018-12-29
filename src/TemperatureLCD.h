@@ -4,8 +4,8 @@
 #include "Arduino.h"
 #include "Wire.h"
 #include "Adafruit_LiquidCrystal.h"
-#include "TemperatureController.h"
-#include "TemperatureSensor.h"
+#include "temperatureController.h"
+#include "temperatureSensor.h"
 
 void temperaturelcd_setup();
 void temperaturelcd_changeMode();

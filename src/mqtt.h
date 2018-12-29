@@ -2,7 +2,7 @@
 #define MQTT_H
 
 #include "Arduino.h"
-#include <ESP8266WiFi.h>
+#include <WifiManager.h>
 #include <PubSubClient.h>
 #include "config.h" 
 #include "LightController.h"

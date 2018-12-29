@@ -1,7 +1,5 @@
 #include "main.h"
 
-//RBD::Timer _mqttReconnectTimer;
-
 boolean _initialSetup = true;
 
 void setup()
@@ -28,12 +26,6 @@ void setup()
   } else {
     Serial.println("failed to mount FS");
   }
-
-  // Setup the timer to retry a connection to Wifi in 30 seconds
-  //_wifiConnectTimer.setTimeout(30000);
-
-  // Setup the timer to retry a connection to MQTT in 30 seconds
-  //_mqttReconnectTimer.setTimeout(30000);
 
   // Run the setup on the temparature controller
   temperaturecontroller_setup(config.temperature_set_point_low,config.temperature_set_point_high,config.publish_temperature_seconds);

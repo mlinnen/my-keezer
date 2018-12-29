@@ -82,7 +82,6 @@ This application depends on the following libraries:
 * RBD_Timer
 * RBD_Button
 * Adafruit_LiquidCrystal
-* Wifi
 * PubSubClient
 * WifiManager
 * ArduinoJson

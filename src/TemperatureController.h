@@ -2,8 +2,8 @@
 #define TemperatureController_h
 
 #include <Arduino.h>
-#include "TemperatureSensor.h"
-#include "TemperatureLCD.h"
+#include "temperatureSensor.h"
+#include "temperatureLCD.h"
 #include <RBD_Button.h>
 #include <RBD_Timer.h>
 #include <PubSubClient.h>

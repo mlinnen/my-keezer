@@ -2,11 +2,15 @@
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
+RBD::Timer _mqttReconnectTimer;
 
 void mqtt_setup(Config &config)
 {
   mqttClient.setServer(config.mqtt_server, config.mqtt_port);
   mqttClient.setCallback(mqtt_callback);
+
+  // Setup the timer to retry a connection to MQTT in 30 seconds
+  _mqttReconnectTimer.setTimeout(30000);
 }
 
 void mqtt_callback(char* topic, byte* payload, unsigned int length) {
@@ -22,8 +26,8 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
 
 void mqtt_reconnect(Config &config) {
   // is it time to try a re-connect to the MQTT broker?
-  //if (_mqttReconnectTimer.isExpired() || _initialSetup)
-  //{
+  if (_mqttReconnectTimer.isExpired())
+  {
     // Make sure we are not already connected
     if (!mqttClient.connected())
     {
@@ -35,19 +39,19 @@ void mqtt_reconnect(Config &config) {
       if (mqttClient.connect(clientId.c_str(),config.mqtt_user_name,config.mqtt_user_password)) {
         Serial.println("connected");
         // Once connected, re-subscribe
-
+        mqtt_subscribe();
       } else {
         Serial.print("failed, rc=");
         Serial.print(mqttClient.state());
         Serial.println(" try again in 30 seconds");
-        //_mqttReconnectTimer.restart();
+        _mqttReconnectTimer.restart();
       }
     }
-  //}
+  }
 }
 
 void mqtt_subscribe() {
-
+    mqttClient.subscribe(MQTT_TOPIC_PING);
 }
 
 void mqtt_publish() {
@@ -57,6 +61,6 @@ void mqtt_publish() {
 }
 
 void mqtt_loop(Config &config) {
-
+    mqtt_reconnect(config);
 }
 
