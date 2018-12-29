@@ -1,4 +1,4 @@
-#include "TemperatureLCD.h"
+#include "temperatureLCD.h"
 
 int _mode;
 int _lastMode;

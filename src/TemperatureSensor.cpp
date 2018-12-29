@@ -1,4 +1,4 @@
-#include "TemperatureSensor.h"
+#include "temperatureSensor.h"
 
 #define TEMPERATURE_PRECISION 9
 OneWire _oneWire(2);
