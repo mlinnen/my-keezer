@@ -1,9 +1,17 @@
-/************************* MQTT Setup *********************************/
+/************************* Default Settings ****************************/
+#define DEFAULT_TEMPERATURE_SETPOINT_HIGH 40.0
+#define DEFAULT_TEMPERATURE_SETPOINT_LOW  38.0
+#define DEFAULT_PUBLISH_TEMPERATURE_SECONDS 15.0    // How often the temperature is published over MQTT
+#define DEFAULT_MOTION_TIMEOUT_SECONDS 30.0         // The time it takes to reset the motion sensor
+#define DEFAULT_LIGHT_ON_SECONDS 120.0              // The time it takes to turn off the lights after motion has stopped
+#define DEFAULT_TEMPERATURE_FAN_SETPOINT_HIGH 10.0  // The differance between top and bottom temp sensors for fans to turn on
+#define DEFAULT_TEMPERATURE_FAN_SETPOINT_LOW 8.0    // The differance between top and bottom temp sensors for fans to turn off
 
-#define MQTT_SERVER      "127.0.0.1"            // Set you MQTT brokers IP
-#define AIO_SERVERPORT   1883                   // use 8883 for SSL
-#define MQTT_USERNAME    "username"             // The user name for the MQTT broker
-#define MQTT_PASSWORD    "password"             // The user name's password for the MQTT broker
+/************************* Wifi Settings *******************************/
+#define WIFI_AP_NAME  "mykeezer-ap"                   // The name of the access point when setting up the wifi
+
+
+/************************* MQTT Topics *********************************/
 
 #define MQTT_TOPIC_PING  "/home/keezer/ping"    // The topic that all keezer devices listens to
 #define MQTT_TOPIC_PINGR "/home/keezer/pingr/1" // The topic that this devices publishes as a response to a ping request

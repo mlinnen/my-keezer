@@ -1,21 +1,17 @@
-#include "TemperatureSensor.h"
+#include "temperatureSensor.h"
 
 #define TEMPERATURE_PRECISION 9
 OneWire _oneWire(2);
 DallasTemperature _ds18b20(&_oneWire);
 DeviceAddress _topThermometer, _bottomThermometer;
 
-TemperatureSensor::TemperatureSensor(boolean celsius, int frequencySeconds)
-{
-  _celsius = celsius;
-  _frequencySeconds = frequencySeconds;
-  // Dont allow for a sample of less than 2 seconds
-  if (frequencySeconds<2) {_frequencySeconds=2;}
-  else {_frequencySeconds = frequencySeconds;}
+RBD::Timer _frequencyTimer;
+int _frequencySeconds;
+boolean _celsius;
+float _topTempearture;
+float _bottomTempearture;
 
-}
-
-void TemperatureSensor::printAddress(DeviceAddress deviceAddress)
+void temparaturesensor_printAddress(DeviceAddress deviceAddress)
 {
   for (uint8_t i = 0; i < 8; i++)
   {
@@ -25,26 +21,32 @@ void TemperatureSensor::printAddress(DeviceAddress deviceAddress)
   }
 }
 
-float TemperatureSensor::topTemperature()
+float temperaturesensor_topTemperature()
 {
   return _topTempearture;
 }
 
-float TemperatureSensor::bottomTemperature()
+float temperaturesensor_bottomTemperature()
 {
   return _bottomTempearture;
 }
 
-float TemperatureSensor::averageTemperature()
+float temperaturesensor_averageTemperature()
 {
   float sum = _bottomTempearture + _topTempearture;
   if (sum==0) {return 0.0;}
   return sum/2;
 }
 
-void TemperatureSensor::setup()
+void temperaturesensor_setup(boolean celsius, int frequencySeconds)
 {
   // Perform any onetime setup.
+  _celsius = celsius;
+  _frequencySeconds = frequencySeconds;
+
+  // Dont allow for a sample of less than 2 seconds
+  if (frequencySeconds<2) {_frequencySeconds=2;}
+  else {_frequencySeconds = frequencySeconds;}
 
   _ds18b20.begin();
   Serial.print("Locating temperature devices...");
@@ -63,11 +65,11 @@ void TemperatureSensor::setup()
   //if (!_oneWire.search(_bottomThermometer)) Serial.println("Unable to find address for Bottom Thermometer");
 
   Serial.print("Temperature Device 0 Address: ");
-  printAddress(_bottomThermometer);
+  temparaturesensor_printAddress(_bottomThermometer);
   Serial.println();
 
   Serial.print("Temperature Device 1 Address: ");
-  printAddress(_topThermometer);
+  temparaturesensor_printAddress(_topThermometer);
   Serial.println();
 
   _ds18b20.setResolution(_bottomThermometer, TEMPERATURE_PRECISION);
@@ -85,7 +87,7 @@ void TemperatureSensor::setup()
   _frequencyTimer.restart();
 }
 
-boolean TemperatureSensor::loop()
+boolean temperaturesensor_loop()
 {
   boolean newReadingAvailable = false;
 

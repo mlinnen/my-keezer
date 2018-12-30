@@ -1,1 +1,1 @@
-python monitor.py -c "config.ini" -t /home/#
+python monitor.py -c "config.ini" -t /home/keezer/#
