@@ -34,8 +34,6 @@ void temperaturecontroller_setup(float lowSetpoint, float highSetpoint, int publ
   digitalWrite(FAN_RELAY_PIN, HIGH);
   digitalWrite(COMPRESSOR_RELAY_PIN, HIGH);
   
-  temperaturelcd_setup();
-
 }
 
 boolean temperaturecontroller_compressor()
@@ -64,7 +62,7 @@ boolean temperaturecontroller_loop(float fanTemperatureLow, float fanTemperature
   // Was the mode button pressed and if so then increment the mode of the 
   if (_modeButton.onPressed())
   {
-    temperaturelcd_changeMode();
+    keezerlcd_changeMode();
     refreshLCD = true;
   }
 
@@ -134,7 +132,7 @@ boolean temperaturecontroller_loop(float fanTemperatureLow, float fanTemperature
     _publishTempTimer.restart();
   }
 
-  if (refreshLCD) {temperaturelcd_print();}
+  if (refreshLCD) {keezerlcd_print();}
 
   return true;
 }

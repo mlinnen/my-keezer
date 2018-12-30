@@ -1,12 +1,12 @@
 #include "main.h"
 
-boolean _initialSetup = true;
-
 void setup()
 {
   Serial.begin(9600);
 
   randomSeed(micros());
+
+  keezerlcd_setup();
 
   // Delay a little bit to give a developer time to connect the monitor to the serial port before running through the rest os the setup
   delay(5000);
@@ -33,9 +33,6 @@ void setup()
   // Run the setup on the light controller
   lightcontroller_setup(config.motion_timeout_seconds,config.light_on_seconds);
   
-  // The inital setup was executed so set the variable to false
-  _initialSetup = false;
-
 }
 
 void loop()

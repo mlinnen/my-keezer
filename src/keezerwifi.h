@@ -2,6 +2,7 @@
 #define KEEZER_WIFI_H
 
 #include "config.h" 
+#include "keezerLCD.h"
 #include <WiFiManager.h>
 #include <RBD_Timer.h>
 

@@ -6,6 +6,7 @@
 #include "keezerwifi.h"
 #include "mqtt.h"
 #include "jsonFile.h"
+#include "keezerLCD.h"
 #include "temperatureController.h"
 #include "LightController.h"
 

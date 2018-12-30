@@ -97,7 +97,7 @@ There are a couple things you need to do so that you can compile the project. I 
 5. Run the following command 
         pio run --target upload
 6. The first time that the application is downloaded to the target platform it will put the device in an Access Point mode which will allow you to configure it for connection to your Wifi
-7. Open your Wifi and connect to "keezer-ap". Note you have 120 seconds after power on to complete this task before the keezer falls out of AP mode and starts controlling the temperature of the beer.  If you dont complete this process before the 120 second timeout simply cycle the power on the keezer and try again
+7. Open your Wifi and connect to "mykeezer-ap". Note you have 120 seconds after power on to complete this task before the keezer falls out of AP mode and starts controlling the temperature of the beer.  If you dont complete this process before the 120 second timeout simply cycle the power on the keezer and try again
 8. Click on the Wifi setup button and fill in the text fields.  Once the information is submitted the device will connect to Wifi and the MQTT broker
 
 ## MQTT

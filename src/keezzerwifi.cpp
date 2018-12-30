@@ -25,7 +25,9 @@ void keezerwifi_setup(Config &config) {
     wifiManager.addParameter(&custom_mqtt_user_name);
     wifiManager.addParameter(&custom_mqtt_user_password);
     wifiManager.setConfigPortalTimeout(120);
-    if (!wifiManager.autoConnect("keezer-ap")){
+    keezerlcd_changeMode(0);
+    keezerlcd_print();
+    if (!wifiManager.autoConnect(WIFI_AP_NAME)){
       Serial.println("Failed to connect to WiFi");
     }
 

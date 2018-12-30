@@ -1,13 +1,21 @@
-#include "temperatureLCD.h"
+#include "keezerLCD.h"
 
 int _mode;
-int _lastMode;
+int _lastMode = -1;
 
 Adafruit_LiquidCrystal _lcd(0);
 
-void temperaturelcd_printText(int mode)
+void keezerlcd_printText(int mode)
 {
   switch (mode) {
+    case 0:
+      _lcd.setCursor(0, 0);
+      _lcd.print("Wifi/MQTT Setup ");
+      _lcd.setCursor(0, 1);
+      _lcd.print("Connect to:");
+      _lcd.setCursor(0, 2);
+      _lcd.print(WIFI_AP_NAME);
+      break;
     case 1:
       _lcd.setCursor(0, 0);
       _lcd.print("Current Temperature ");
@@ -34,7 +42,7 @@ void temperaturelcd_printText(int mode)
 
 }
 
-void temperaturelcd_printVariables(int mode)
+void keezerlcd_printVariables(int mode)
 {
   switch (mode) {
     case 1:
@@ -62,18 +70,18 @@ void temperaturelcd_printVariables(int mode)
 
 }
 
-void temperaturelcd_setup()
+void keezerlcd_setup()
 {
-  _mode = 1;
+  _mode = 0;
 
   // set up the LCD's number of rows and columns: 
   _lcd.begin(20, 4);
   // Print a message to the LCD.
-  _lcd.print("Keezer Temperature  ");
+  _lcd.print("My Keezer  ");
 
 }
 
-void temperaturelcd_changeMode()
+void keezerlcd_changeMode()
 {
   _mode = _mode + 1;
   if (_mode>3) {_mode = 1;}
@@ -81,13 +89,20 @@ void temperaturelcd_changeMode()
   Serial.println(_mode);
 }
 
-void temperaturelcd_print()
+void keezerlcd_changeMode(int mode)
+{
+  _mode = mode;
+  Serial.print("Mode: ");
+  Serial.println(_mode);
+}
+
+void keezerlcd_print()
 {
   // set the cursor to column 0, line 1
   // (note: line 1 is the second row, since counting begins with 0):
   if (_lastMode!=_mode) {
-    temperaturelcd_printText(_mode);
+    keezerlcd_printText(_mode);
   }
-  temperaturelcd_printVariables(_mode);
+  keezerlcd_printVariables(_mode);
   _lastMode = _mode;
 }

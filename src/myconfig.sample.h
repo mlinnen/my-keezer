@@ -7,6 +7,10 @@
 #define DEFAULT_TEMPERATURE_FAN_SETPOINT_HIGH 10.0  // The differance between top and bottom temp sensors for fans to turn on
 #define DEFAULT_TEMPERATURE_FAN_SETPOINT_LOW 8.0    // The differance between top and bottom temp sensors for fans to turn off
 
+/************************* Wifi Settings *******************************/
+#define WIFI_AP_NAME  "mykeezer-ap"                   // The name of the access point when setting up the wifi
+
+
 /************************* MQTT Topics *********************************/
 
 #define MQTT_TOPIC_PING  "/home/keezer/ping"    // The topic that all keezer devices listens to
