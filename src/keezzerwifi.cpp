@@ -5,6 +5,8 @@ RBD::Timer _wifiConnectTimer;
 
 void keezerwifi_setup(Config &config) {
 
+    _wifiConnectTimer.setTimeout(30000);
+
     WiFiManager wifiManager;
     //reset saved settings
     //wifiManager.resetSettings(); // For testing
@@ -69,7 +71,7 @@ void keezerwifi_reconnect(Config &config) {
   }
   else
   {
-    Serial.println("Unable to connect to WiFi but will try again later");
+    Serial.println("Unable to connect to WiFi but will try again in 30 seconds");
     _wifiConnectTimer.restart();
   }
 
