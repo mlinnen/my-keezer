@@ -30,6 +30,7 @@ void keezerwifi_setup(Config &config) {
     if (!wifiManager.autoConnect(WIFI_AP_NAME)){
       Serial.println("Failed to connect to WiFi");
     }
+    keezerlcd_changeMode(1);
 
     WiFi.SSID().toCharArray(config.wifi_ssid,20);
     WiFi.psk().toCharArray(config.wifi_password,20);
