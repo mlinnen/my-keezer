@@ -90,8 +90,10 @@ void keezerlcd_print()
 
 void keezerlcd_on() {
   _lcd.display();
+  _lcd.setBacklight(HIGH);
 }
 
 void keezerlcd_off() {
   _lcd.noDisplay();
+  _lcd.setBacklight(LOW);
 }
