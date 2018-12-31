@@ -8,6 +8,8 @@ void keezerlcd_printText(int mode)
 {
   switch (mode) {
     case 0:
+      _lcd.display();
+      _lcd.setBacklight(HIGH);
       _lcd.setCursor(0, 0);
       _lcd.print("Wifi/MQTT Setup ");
       _lcd.setCursor(0, 1);
