@@ -87,3 +87,11 @@ void keezerlcd_print()
   keezerlcd_printVariables(temperaturecontroller_mode());
   _lastMode = temperaturecontroller_mode();
 }
+
+void keezerlcd_on() {
+  _lcd.display();
+}
+
+void keezerlcd_off() {
+  _lcd.noDisplay();
+}
