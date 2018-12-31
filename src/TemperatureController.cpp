@@ -6,9 +6,10 @@
 
 RBD::Button _modeButton(MODE_BUTTON_PIN);
 
-int _mode;
+int _mode=-1;
 boolean _compressor = false;
 boolean _lastCompressor;
+boolean _waitforButtonRelease = false;
 boolean _fan = false;
 boolean _lastFan;
 float _lowSetpoint = 0;
@@ -23,7 +24,6 @@ unsigned long pressedTime;
 
 void temperaturecontroller_setup(float lowSetpoint, float highSetpoint, int publishTemperatureSeconds)
 {
-  _mode = 0;
   _lowSetpoint = lowSetpoint;
   _highSetpoint = highSetpoint;
 
@@ -68,11 +68,13 @@ boolean temperaturecontroller_loop(float fanTemperatureLow, float fanTemperature
   if (_modeButton.onPressed())
   {
     pressedTime = millis();
+    _waitforButtonRelease = true;
   }
-  if (_modeButton.onReleased())
+  if (_modeButton.onReleased() && _waitforButtonRelease)
   {
     unsigned long releaseTime;
     releaseTime = millis();
+    _waitforButtonRelease = false;
     // Determine if the mode button was pressed for a long time (>3 seconds)
     if ((releaseTime-pressedTime)/1000 > 3) {
       Serial.println("Mode button released long press");
