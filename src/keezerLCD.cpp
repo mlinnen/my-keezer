@@ -1,6 +1,5 @@
 #include "keezerLCD.h"
 
-int _mode;
 int _lastMode = -1;
 
 Adafruit_LiquidCrystal _lcd(0);
@@ -72,37 +71,19 @@ void keezerlcd_printVariables(int mode)
 
 void keezerlcd_setup()
 {
-  _mode = 0;
-
   // set up the LCD's number of rows and columns: 
   _lcd.begin(20, 4);
   // Print a message to the LCD.
   _lcd.print("My Keezer  ");
-
-}
-
-void keezerlcd_changeMode()
-{
-  _mode = _mode + 1;
-  if (_mode>3) {_mode = 1;}
-  Serial.print("Mode: ");
-  Serial.println(_mode);
-}
-
-void keezerlcd_changeMode(int mode)
-{
-  _mode = mode;
-  Serial.print("Mode: ");
-  Serial.println(_mode);
 }
 
 void keezerlcd_print()
 {
   // set the cursor to column 0, line 1
   // (note: line 1 is the second row, since counting begins with 0):
-  if (_lastMode!=_mode) {
-    keezerlcd_printText(_mode);
+  if (_lastMode!=temperaturecontroller_mode()) {
+    keezerlcd_printText(temperaturecontroller_mode());
   }
-  keezerlcd_printVariables(_mode);
-  _lastMode = _mode;
+  keezerlcd_printVariables(temperaturecontroller_mode());
+  _lastMode = temperaturecontroller_mode();
 }

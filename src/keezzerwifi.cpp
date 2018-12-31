@@ -3,7 +3,7 @@
 RBD::Timer _wifiConnectTimer;
 
 
-void keezerwifi_setup(Config &config) {
+void keezerwifi_setup(Config &config, boolean manualConnect) {
 
     _wifiConnectTimer.setTimeout(30000);
 
@@ -25,12 +25,19 @@ void keezerwifi_setup(Config &config) {
     wifiManager.addParameter(&custom_mqtt_user_name);
     wifiManager.addParameter(&custom_mqtt_user_password);
     wifiManager.setConfigPortalTimeout(120);
-    keezerlcd_changeMode(0);
+    temperaturecontroller_changeMode(0);
     keezerlcd_print();
-    if (!wifiManager.autoConnect(WIFI_AP_NAME)){
-      Serial.println("Failed to connect to WiFi");
+    if (manualConnect) {
+      if (!wifiManager.startConfigPortal(WIFI_AP_NAME)){
+        Serial.println("Failed to connect to WiFi");
+      }
     }
-    keezerlcd_changeMode(1);
+    else {
+      if (!wifiManager.autoConnect(WIFI_AP_NAME)){
+        Serial.println("Failed to connect to WiFi");
+      }
+    }
+    temperaturecontroller_changeMode(1);
 
     WiFi.SSID().toCharArray(config.wifi_ssid,20);
     WiFi.psk().toCharArray(config.wifi_password,20);
@@ -40,7 +47,12 @@ void keezerwifi_setup(Config &config) {
 
 }
 
-void keezerwifi_reconnect(Config &config) {
+void keezerwifi_loop(Config &config) {
+  if (temperaturecontroller_mode()==0) {
+    Serial.println("Mode 0 detected so enter config");
+    keezerwifi_setup(config, true);
+    return;
+  }
   if (WiFi.status() == WL_CONNECTED)
   {
     return;

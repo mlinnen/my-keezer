@@ -17,7 +17,7 @@ void setup()
     jsonfile_load("/config.txt",config);
     jsonfile_print("/config.txt");
 
-    keezerwifi_setup(config);
+    keezerwifi_setup(config, false);
 
     mqtt_setup(config);
 
@@ -38,7 +38,7 @@ void setup()
 void loop()
 {
   // Connect to Wifi if not connected
-  keezerwifi_reconnect(config);
+  keezerwifi_loop(config);
 
   // Process all the loops
   mqtt_loop(config);

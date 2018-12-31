@@ -2,9 +2,11 @@
 
 #define COMPRESSOR_RELAY_PIN 12
 #define FAN_RELAY_PIN 16
+#define MODE_BUTTON_PIN 13
 
-RBD::Button _modeButton(13);
+RBD::Button _modeButton(MODE_BUTTON_PIN);
 
+int _mode;
 boolean _compressor = false;
 boolean _lastCompressor;
 boolean _fan = false;
@@ -17,9 +19,11 @@ boolean _publishFan = false;
 RBD::Timer _publishTempTimer;
 void publish(const char* topic, float temp);
 void publish(const char* topic, boolean compressor);
+unsigned long pressedTime;
 
 void temperaturecontroller_setup(float lowSetpoint, float highSetpoint, int publishTemperatureSeconds)
 {
+  _mode = 0;
   _lowSetpoint = lowSetpoint;
   _highSetpoint = highSetpoint;
 
@@ -59,11 +63,27 @@ float temperaturecontroller_highSetPointTemperature()
 boolean temperaturecontroller_loop(float fanTemperatureLow, float fanTemperatureHigh)
 {
   boolean refreshLCD = false;
-  // Was the mode button pressed and if so then increment the mode of the 
+
+  // Capture when the mode button was first pressed
   if (_modeButton.onPressed())
   {
-    keezerlcd_changeMode();
-    refreshLCD = true;
+    pressedTime = millis();
+  }
+  if (_modeButton.onReleased())
+  {
+    unsigned long releaseTime;
+    releaseTime = millis();
+    // Determine if the mode button was pressed for a long time (>3 seconds)
+    if ((releaseTime-pressedTime)/1000 > 3) {
+      Serial.println("Mode button released long press");
+      temperaturecontroller_changeMode(0);
+    }
+    else
+    {
+      Serial.println("Mode button released short press");
+      temperaturecontroller_changeMode();
+      refreshLCD = true;
+    }
   }
 
   // This is the service loop that is called from the main program and will update the state of this component.
@@ -180,4 +200,24 @@ void temperaturecontroller_publish(PubSubClient &mqttClient, const char* topic, 
         mqttClient.publish(topic, "0", true);
       }
     }
+}
+
+int temperaturecontroller_mode()
+{
+  return _mode;
+}
+
+void temperaturecontroller_changeMode()
+{
+  _mode = _mode + 1;
+  if (_mode>3) {_mode = 1;}
+  Serial.print("Mode: ");
+  Serial.println(_mode);
+}
+
+void temperaturecontroller_changeMode(int mode)
+{
+  _mode = mode;
+  Serial.print("Mode: ");
+  Serial.println(_mode);
 }
