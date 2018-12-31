@@ -28,13 +28,21 @@ void keezerwifi_setup(Config &config, boolean manualConnect) {
     temperaturecontroller_changeMode(0);
     keezerlcd_print();
     if (manualConnect) {
+      Serial.println("Starting manual connect to WiFi");
       if (!wifiManager.startConfigPortal(WIFI_AP_NAME)){
         Serial.println("Failed to connect to WiFi");
       }
+      else{
+        Serial.println("Connected to WiFi");
+      }
     }
     else {
+      Serial.println("Starting auto connect to WiFi");
       if (!wifiManager.autoConnect(WIFI_AP_NAME)){
         Serial.println("Failed to connect to WiFi");
+      }
+      else{
+        Serial.println("Connected to WiFi");
       }
     }
     temperaturecontroller_changeMode(1);
