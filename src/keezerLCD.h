@@ -8,8 +8,6 @@
 #include "temperatureSensor.h"
 
 void keezerlcd_setup();
-void keezerlcd_changeMode();
-void keezerlcd_changeMode(int mode);
 void keezerlcd_print();
 void keezerlcd_printText(int mode);
 void keezerlcd_printVariables(int mode);

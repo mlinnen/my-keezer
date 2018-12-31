@@ -11,6 +11,9 @@
 
 void temperaturecontroller_setup(float lowSetpoint, float highSetpoint, int publishTemperatureSeconds);
 boolean temperaturecontroller_loop(float fanTemperatureLow, float fanTemperatureHigh);
+void temperaturecontroller_changeMode();
+void temperaturecontroller_changeMode(int mode);
+int temperaturecontroller_mode();
 float temperaturecontroller_highSetPointTemperature();
 float temperaturecontroller_averageSetPointTemperature();
 float temperaturecontroller_lowSetPointTemperature();
