@@ -60,9 +60,9 @@ void temperaturesensor_setup(boolean celsius, int frequencySeconds)
   Serial.print(_ds18b20.getDeviceCount(), DEC);
   Serial.println(" temperature devices.");
 
-  if (!_ds18b20.getAddress(_bottomThermometer, 0)) Serial.println("Unable to find address for temperature Device 0");
-  if (!_ds18b20.getAddress(_topThermometer, 1)) Serial.println("Unable to find address for temperature Device 1");
-  if (!_ds18b20.getAddress(_exteriorThermometer, 2)) Serial.println("Unable to find address for temperature Device 2");
+  if (!_ds18b20.getAddress(_bottomThermometer, TEMP_BOTTOM_SENSOR_INDEX)) Serial.println("Unable to find address for bottom temperature sensor ");
+  if (!_ds18b20.getAddress(_topThermometer, TEMP_TOP_SENSOR_INDEX)) Serial.println("Unable to find address for top temperature sensor ");
+  if (!_ds18b20.getAddress(_exteriorThermometer, TEMP_EXTERIOR_SENSOR_INDEX)) Serial.println("Unable to find address for exterior temperature sensor ");
 
   // Must be called before search()
   //_oneWire.reset_search();
@@ -71,15 +71,15 @@ void temperaturesensor_setup(boolean celsius, int frequencySeconds)
   // assigns the seconds address found to outsideThermometer
   //if (!_oneWire.search(_bottomThermometer)) Serial.println("Unable to find address for Bottom Thermometer");
 
-  Serial.print("Temperature Device 0 Address: ");
+  Serial.print("Address for Bottom Temperature sensor: ");
   temparaturesensor_printAddress(_bottomThermometer);
   Serial.println();
 
-  Serial.print("Temperature Device 1 Address: ");
+  Serial.print("Address for Top Temperature sensor: ");
   temparaturesensor_printAddress(_topThermometer);
   Serial.println();
 
-  Serial.print("Temperature Device 2 Address: ");
+  Serial.print("Address for Exterior Temperature sensor: ");
   temparaturesensor_printAddress(_exteriorThermometer);
   Serial.println();
 
@@ -87,15 +87,15 @@ void temperaturesensor_setup(boolean celsius, int frequencySeconds)
   _ds18b20.setResolution(_topThermometer, TEMPERATURE_PRECISION);
   _ds18b20.setResolution(_exteriorThermometer, TEMPERATURE_PRECISION);
 
-  Serial.print("Temperature Device 0 Resolution: ");
+  Serial.print("Bottom Temperature sensor Resolution: ");
   Serial.print(_ds18b20.getResolution(_bottomThermometer), DEC);
   Serial.println();
 
-  Serial.print("Temperature Device 1 Resolution: ");
+  Serial.print("Top Temperature sensor Resolution: ");
   Serial.print(_ds18b20.getResolution(_topThermometer), DEC);
   Serial.println();
 
-  Serial.print("Temperature Device 2 Resolution: ");
+  Serial.print("Exterior Temperature sensor Resolution: ");
   Serial.print(_ds18b20.getResolution(_exteriorThermometer), DEC);
   Serial.println();
 
