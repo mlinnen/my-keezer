@@ -3,10 +3,13 @@
 RBD::Timer motionTimer;
 RBD::Timer lightTimer;
 
+boolean _motion = false;
+boolean _light = false;
 boolean _publishLight = false;
 boolean _publishMotion = false;
 boolean _lastMotion;
 boolean _lastLight;
+int _override = -1;
 
 void lightcontroller_setup(int motionTimeOutSeconds, int lightOnSeconds)
 {
@@ -19,36 +22,65 @@ void lightcontroller_setup(int motionTimeOutSeconds, int lightOnSeconds)
 
 boolean lightcontroller_loop()
 {
-    if (digitalRead(MOTION_SENSOR_PIN)){
-        // Turn on the lights and start the timers
-        digitalWrite(LIGHT_RELAY_PIN,LOW);
-        if (_lastMotion==false) {
-            _publishMotion = true;
-            Serial.println("Motion On");
+    // read the motion sensor
+    boolean sensorMotion = digitalRead(MOTION_SENSOR_PIN);
+
+    // If motion was detected then restart the timers
+    if (sensorMotion) {
+        motionTimer.restart();
+        // The light timer only gets restarted if it is not overriden
+        if (_override==-1) {
+            lightTimer.restart();
         }
-        if (_lastLight==false) {
-            _publishLight = true;
+    }
+
+    // The timer evens out the motion detection
+    if (motionTimer.isExpired()) {
+        _motion = false;
+    }
+    else {
+        _motion = true;
+    }
+
+    // If the motion has changed then lets publish it
+    if (_motion != _lastMotion) {
+        _publishMotion = true;
+        if (_motion) { Serial.println("Motion On"); }
+        else { Serial.println("Motion Off"); }
+    }
+
+    // Determine if the lights should be on or off
+    if (_override==-1) {
+        // Not in override mode so the light turns on based on the light timer
+        if (lightTimer.isExpired()) {
+            _light = false;
+        } 
+        else {
+            _light = true;
+        }
+    }
+    else if (_override==1) {
+        _light = true;
+    }
+    else if (_override==0) {
+        _light = false;
+    }
+    
+    // If the light state has changed then lets publish it and set the relay
+    if (_light!=_lastLight) {
+        _publishLight = true;
+        if (_light) {
+            digitalWrite(LIGHT_RELAY_PIN,LOW);
             Serial.println("Light On");
         }
-        motionTimer.restart();
-        lightTimer.restart();
-        _lastMotion = true;
-        _lastLight = true;
+        else {
+            digitalWrite(LIGHT_RELAY_PIN,HIGH);
+            Serial.println("Light Off");
+        }
     }
-
-    if(motionTimer.onExpired()) {
-        _publishMotion = true;
-        Serial.println("Motion Off");
-        _lastMotion = false;
-    }
-
-    if(lightTimer.onExpired()) {
-        // turn off the lights
-        digitalWrite(LIGHT_RELAY_PIN,HIGH);
-        _publishLight = true;
-        Serial.println("Light Off");
-        _lastLight = false;
-    }
+    
+    _lastMotion = _motion;
+    _lastLight = _light;
 
     return true;
 }
@@ -83,6 +115,15 @@ void lightcontroller_subscribe(PubSubClient &mqttClient)
         mqttClient.subscribe(MQTT_TOPIC_LIGHT);
     }
 }
+
+void lightcontroller_message_handler(String topic, String message) {
+  if (topic.equalsIgnoreCase(MQTT_TOPIC_LIGHT_SET)) {
+    if (message.equalsIgnoreCase("1")) { _override = 1; }
+    else if (message.equalsIgnoreCase("0")) { _override = 0; }
+    else { _override = -1; }
+  }
+}
+
 
 
 

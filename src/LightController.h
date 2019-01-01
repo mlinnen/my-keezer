@@ -12,6 +12,6 @@
 void lightcontroller_setup(int motionTimeOutSeconds, int lightOnSeconds);
 boolean lightcontroller_loop();
 void lightcontroller_publish(PubSubClient &mqttClient);
-void lightcontroller_subscribe(PubSubClient mqtt_client);
+void lightcontroller_subscribe(PubSubClient &mqtt_client);
 
 #endif

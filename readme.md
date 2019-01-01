@@ -120,9 +120,21 @@ This allows some external application to request what keezers are on the bus.  E
 ```
 
 #### Turn on Keezer LED lighting
-This allows some external application to turn on the LED lights attached to the keezer.
+This allows some external application to turn on the LED lights attached to the keezer overriding the motion sensor.
+
+Turn on the lights
 ``` 
 /home/keezer/{id}/light/set 1 
+```
+
+Turn off the lights
+``` 
+/home/keezer/{id}/light/set 0 
+```
+
+Go back to using the motion detector to control the lights
+``` 
+/home/keezer/{id}/light/set  
 ```
 
 ### MQTT Publications
