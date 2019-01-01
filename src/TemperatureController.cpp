@@ -150,6 +150,9 @@ boolean temperaturecontroller_loop(float fanTemperatureLow, float fanTemperature
     Serial.print("Top Temp ");
     Serial.print(temperaturesensor_topTemperature(), 1);
     Serial.println();
+    Serial.print("Ext Temp ");
+    Serial.print(temperaturesensor_exteriorTemperature(), 1);
+    Serial.println();
 
     _publishTempTimer.restart();
   }
@@ -175,6 +178,7 @@ void temperaturecontroller_publish(PubSubClient &mqttClient) {
     temperaturecontroller_publish(mqttClient, MQTT_TOPIC_TEMP_AVG, temperaturesensor_averageTemperature());
     temperaturecontroller_publish(mqttClient, MQTT_TOPIC_TEMP_BOTTOM, temperaturesensor_bottomTemperature());
     temperaturecontroller_publish(mqttClient, MQTT_TOPIC_TEMP_TOP, temperaturesensor_topTemperature());
+    temperaturecontroller_publish(mqttClient, MQTT_TOPIC_TEMP_EXTERIOR, temperaturesensor_exteriorTemperature());
     _publishTemperature = false;
   }
 }

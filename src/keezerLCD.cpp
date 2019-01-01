@@ -26,16 +26,20 @@ void keezerlcd_printText(int mode)
       _lcd.print("Comp     Bot        ");
       break;
     case 2:
+      _lcd.setCursor(0, 0);
+      _lcd.print("Current Temperature2");
+      _lcd.setCursor(0, 1);
+      _lcd.print("Set      Ext        ");
+      _lcd.setCursor(0, 2);
+      _lcd.print("                    ");
+      _lcd.setCursor(0, 3);
+      _lcd.print("Comp                ");
+      break;
+    case 3:
       _lcd.print("Set Temperature     ");
       _lcd.print("High                ");
       _lcd.print("Avg                 ");
       _lcd.print("Low                 ");
-      break;
-    case 3:
-      _lcd.print("Daily Temperature   ");
-      _lcd.print("Top Hi      Low     ");
-      _lcd.print("Avg Hi      Low     ");
-      _lcd.print("Bot Hi      Low     ");
       break;
   }
 
@@ -58,6 +62,11 @@ void keezerlcd_printVariables(int mode)
       _lcd.print(temperaturesensor_bottomTemperature(),1);
       break;
     case 2:
+      _lcd.setCursor(13, 1);
+      _lcd.print(temperaturesensor_exteriorTemperature(),1);
+      _lcd.setCursor(5, 2);
+      break;
+    case 3:
       _lcd.setCursor(5, 1);
       _lcd.print(temperaturecontroller_highSetPointTemperature(),1);
       _lcd.setCursor(5, 2);

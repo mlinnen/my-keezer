@@ -11,6 +11,7 @@ boolean temperaturesensor_loop();
 float temperaturesensor_topTemperature();
 float temperaturesensor_averageTemperature();
 float temperaturesensor_bottomTemperature();
+float temperaturesensor_exteriorTemperature();
 
 
 #endif
