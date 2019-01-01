@@ -25,3 +25,4 @@
 #define MQTT_TOPIC_COMPRESSOR   "/home/keezer/1/compressor/value"   // The topic for the keezer compressor
 #define MQTT_TOPIC_FAN          "/home/keezer/1/fan/value"          // The topic for the keezer fan
 #define MQTT_TOPIC_LIGHT        "/home/keezer/1/light/value"        // The topic for the keezer light
+#define MQTT_TOPIC_LIGHT_SET    "/home/keezer/1/light/set"          // The topic for setting the keezer light

@@ -58,6 +58,7 @@ void mqtt_reconnect(Config &config) {
 
 void mqtt_subscribe() {
     mqttClient.subscribe(MQTT_TOPIC_PING);
+    lightcontroller_subscribe(mqttClient);
 }
 
 void mqtt_publish() {

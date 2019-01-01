@@ -119,6 +119,12 @@ This allows some external application to request what keezers are on the bus.  E
 /home/keezer/ping 
 ```
 
+#### Turn on Keezer LED lighting
+This allows some external application to turn on the LED lights attached to the keezer.
+``` 
+/home/keezer/{id}/light/set 1 
+```
+
 ### MQTT Publications
 
 #### Keezer ping response

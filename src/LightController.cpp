@@ -76,4 +76,13 @@ void lightcontroller_publish(PubSubClient &mqttClient)
     }
 }
 
+void lightcontroller_subscribe(PubSubClient &mqttClient)
+{
+    if (mqttClient.connected()) 
+    {
+        mqttClient.subscribe(MQTT_TOPIC_LIGHT);
+    }
+}
+
+
 

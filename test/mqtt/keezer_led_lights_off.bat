@@ -1,0 +1,1 @@
+python publish.py -c "config.ini" -t /home/keezer/light/set -m "0"
