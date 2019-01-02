@@ -1,11 +1,13 @@
 #include "keezerwifi.h"
 
 RBD::Timer _wifiConnectTimer;
-
+boolean _saveConfig = false;
 
 void keezerwifi_setup(Config &config, boolean manualConnect) {
 
     _wifiConnectTimer.setTimeout(30000);
+
+    _saveConfig = false;
 
     WiFiManager wifiManager;
     //reset saved settings
@@ -24,6 +26,7 @@ void keezerwifi_setup(Config &config, boolean manualConnect) {
     wifiManager.addParameter(&custom_mqtt_port);
     wifiManager.addParameter(&custom_mqtt_user_name);
     wifiManager.addParameter(&custom_mqtt_user_password);
+    wifiManager.setSaveConfigCallback(keezerwifi_saveConfigCallback);
     wifiManager.setConfigPortalTimeout(120);
     temperaturecontroller_changeMode(0);
     keezerlcd_print();
@@ -47,15 +50,29 @@ void keezerwifi_setup(Config &config, boolean manualConnect) {
     }
     temperaturecontroller_changeMode(1);
 
-    WiFi.SSID().toCharArray(config.wifi_ssid,20);
-    WiFi.psk().toCharArray(config.wifi_password,20);
-    std::copy(custom_mqtt_server.getValue(),custom_mqtt_server.getValue() + strlen(custom_mqtt_server.getValue()),config.mqtt_server);
-    std::copy(custom_mqtt_user_name.getValue(),custom_mqtt_user_name.getValue() + strlen(custom_mqtt_user_name.getValue()),config.mqtt_user_name);
-    std::copy(custom_mqtt_user_password.getValue(),custom_mqtt_user_password.getValue() + strlen(custom_mqtt_user_password.getValue() ),config.mqtt_user_password);
+    // If the _saveConfig is true then we must have entered config mode and we should pull out what the user entered in on teh web page
+    if (_saveConfig) {
+      WiFi.SSID().toCharArray(config.wifi_ssid,20);
+      WiFi.psk().toCharArray(config.wifi_password,20);
+      std::copy(custom_mqtt_server.getValue(),custom_mqtt_server.getValue() + strlen(custom_mqtt_server.getValue()),config.mqtt_server);
+      std::copy(custom_mqtt_user_name.getValue(),custom_mqtt_user_name.getValue() + strlen(custom_mqtt_user_name.getValue()),config.mqtt_user_name);
+      std::copy(custom_mqtt_user_password.getValue(),custom_mqtt_user_password.getValue() + strlen(custom_mqtt_user_password.getValue() ),config.mqtt_user_password);
+    }
+}
 
+boolean keezerwifi_saveConfig()
+{
+  return _saveConfig;
+}
+
+void keezerwifi_saveConfigCallback () {
+  _saveConfig = true;
 }
 
 void keezerwifi_loop(Config &config) {
+  
+  _saveConfig = false;
+
   if (temperaturecontroller_mode()==0) {
     Serial.println("Mode 0 detected so enter config");
     keezerwifi_setup(config, true);

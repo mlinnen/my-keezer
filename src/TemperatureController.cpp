@@ -88,7 +88,7 @@ boolean temperaturecontroller_loop(float fanTemperatureLow, float fanTemperature
     }
   }
 
-  // This is the service loop that is called from the main program and will update the state of this component.
+  // Check if a new set of temp readings exist
   if (temperaturesensor_loop() == true)
   {
 
@@ -130,6 +130,14 @@ boolean temperaturecontroller_loop(float fanTemperatureLow, float fanTemperature
 
     refreshLCD = true;
   }
+  
+  // if the keezer lights are on then turn on the LCD
+  if (lightcontroller_light()) {
+    keezerlcd_on();
+  }
+  else {
+    keezerlcd_off();
+  }
 
   if (_publishTempTimer.isExpired())
   {
@@ -149,6 +157,9 @@ boolean temperaturecontroller_loop(float fanTemperatureLow, float fanTemperature
     Serial.println();
     Serial.print("Top Temp ");
     Serial.print(temperaturesensor_topTemperature(), 1);
+    Serial.println();
+    Serial.print("Ext Temp ");
+    Serial.print(temperaturesensor_exteriorTemperature(), 1);
     Serial.println();
 
     _publishTempTimer.restart();
@@ -175,6 +186,7 @@ void temperaturecontroller_publish(PubSubClient &mqttClient) {
     temperaturecontroller_publish(mqttClient, MQTT_TOPIC_TEMP_AVG, temperaturesensor_averageTemperature());
     temperaturecontroller_publish(mqttClient, MQTT_TOPIC_TEMP_BOTTOM, temperaturesensor_bottomTemperature());
     temperaturecontroller_publish(mqttClient, MQTT_TOPIC_TEMP_TOP, temperaturesensor_topTemperature());
+    temperaturecontroller_publish(mqttClient, MQTT_TOPIC_TEMP_EXTERIOR, temperaturesensor_exteriorTemperature());
     _publishTemperature = false;
   }
 }
