@@ -6,7 +6,7 @@ Master Branch [![Build Status](https://travis-ci.org/mlinnen/my-keezer.svg?branc
 Dev Branch [![Build Status](https://travis-ci.org/mlinnen/my-keezer.svg?branch=dev)](https://travis-ci.org/mlinnen/my-keezer)
 
 ## Goals 
-I have a number of goals I want to achieve for this custom controller.  At this point I doubt all of this could or should be done on a single ESP8266 micro.  It is likely I will have a number of ESP8266's that work together over MQTT to achieve all of the functionality I want.  This project will evolve over a long period of time.  The following is a list of goals which I hope to eventually turn into actual features.
+I have a number of goals I want to achieve for this custom controller.  At this point I doubt all of this could or should be done on a single ESP8266 micro.  It is likely I will have a number of ESP8266's that work together over MQTT to achieve all of the functionality I want.  This project will evolve over a long period of time.
 
 ### Future list of features
 Check out the [Github Issues (label enhancements)](https://github.com/mlinnen/my-keezer/labels/enhancement) for a list of features that are planned for a later date.
@@ -16,6 +16,7 @@ This is a list of actual features the current code base supports.
 
 ### Current list of features
 * Measure the temperature inside the keezer with two temperature sensors (one at the top and one at the bottom)
+* Measure the temperature outside the keezer
 * Control the keezer temperature given a temperature set point and the temperature sensor reading ()
 * Display the current temperature of the keezer on an LCD
 * Turn on/off a fan(s) to circulate the air in the keezer when the difference between the top and bottom sensors is greater than a given threshold.  
@@ -29,7 +30,7 @@ This is a list of actual features the current code base supports.
 * Allow for the keezer to join a new Wifi or a different MQTT broker by holding down the mode pushbutton for > 3 seconds.
 
 ## Hardware
-* 2 DS18B20 Temperature Sensor
+* 3 DS18B20 Temperature Sensors
 * 1 4.7K Resistor
 * 1 [HUZZAH ESP8266](https://www.adafruit.com/product/2471)
 * 1 [4 Channel Relay Board](https://www.sunfounder.com/4-channel-5v-relay-shield-module.html)
@@ -69,7 +70,16 @@ Set  43.0 Top 44.5
 Comp Off  Bot 42.5
 ```  
 
-Example Mode 2 Set Temperature
+Example Mode 2 External Temperature
+```
+Current Temperature2
+Set  43.0 Ext 82.0
+        
+                  
+Comp Off          
+```
+
+Example Mode 3 Set Temperature
 ```
 Set Temperature
 Top 44.0

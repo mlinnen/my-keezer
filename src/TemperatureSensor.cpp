@@ -3,13 +3,14 @@
 #define TEMPERATURE_PRECISION 9
 OneWire _oneWire(2);
 DallasTemperature _ds18b20(&_oneWire);
-DeviceAddress _topThermometer, _bottomThermometer;
+DeviceAddress _topThermometer, _bottomThermometer, _exteriorThermometer;
 
 RBD::Timer _frequencyTimer;
 int _frequencySeconds;
 boolean _celsius;
-float _topTempearture;
-float _bottomTempearture;
+float _topTemperature;
+float _bottomTemperature;
+float _exteriorTemperature;
 
 void temparaturesensor_printAddress(DeviceAddress deviceAddress)
 {
@@ -23,17 +24,22 @@ void temparaturesensor_printAddress(DeviceAddress deviceAddress)
 
 float temperaturesensor_topTemperature()
 {
-  return _topTempearture;
+  return _topTemperature;
 }
 
 float temperaturesensor_bottomTemperature()
 {
-  return _bottomTempearture;
+  return _bottomTemperature;
+}
+
+float temperaturesensor_exteriorTemperature()
+{
+  return _exteriorTemperature;
 }
 
 float temperaturesensor_averageTemperature()
 {
-  float sum = _bottomTempearture + _topTempearture;
+  float sum = _bottomTemperature + _topTemperature;
   if (sum==0) {return 0.0;}
   return sum/2;
 }
@@ -54,8 +60,9 @@ void temperaturesensor_setup(boolean celsius, int frequencySeconds)
   Serial.print(_ds18b20.getDeviceCount(), DEC);
   Serial.println(" temperature devices.");
 
-  if (!_ds18b20.getAddress(_bottomThermometer, 0)) Serial.println("Unable to find address for temperature Device 0");
-  if (!_ds18b20.getAddress(_topThermometer, 1)) Serial.println("Unable to find address for temperature Device 1");
+  if (!_ds18b20.getAddress(_bottomThermometer, TEMP_BOTTOM_SENSOR_INDEX)) Serial.println("Unable to find address for bottom temperature sensor ");
+  if (!_ds18b20.getAddress(_topThermometer, TEMP_TOP_SENSOR_INDEX)) Serial.println("Unable to find address for top temperature sensor ");
+  if (!_ds18b20.getAddress(_exteriorThermometer, TEMP_EXTERIOR_SENSOR_INDEX)) Serial.println("Unable to find address for exterior temperature sensor ");
 
   // Must be called before search()
   //_oneWire.reset_search();
@@ -64,23 +71,32 @@ void temperaturesensor_setup(boolean celsius, int frequencySeconds)
   // assigns the seconds address found to outsideThermometer
   //if (!_oneWire.search(_bottomThermometer)) Serial.println("Unable to find address for Bottom Thermometer");
 
-  Serial.print("Temperature Device 0 Address: ");
+  Serial.print("Address for Bottom Temperature sensor: ");
   temparaturesensor_printAddress(_bottomThermometer);
   Serial.println();
 
-  Serial.print("Temperature Device 1 Address: ");
+  Serial.print("Address for Top Temperature sensor: ");
   temparaturesensor_printAddress(_topThermometer);
+  Serial.println();
+
+  Serial.print("Address for Exterior Temperature sensor: ");
+  temparaturesensor_printAddress(_exteriorThermometer);
   Serial.println();
 
   _ds18b20.setResolution(_bottomThermometer, TEMPERATURE_PRECISION);
   _ds18b20.setResolution(_topThermometer, TEMPERATURE_PRECISION);
+  _ds18b20.setResolution(_exteriorThermometer, TEMPERATURE_PRECISION);
 
-  Serial.print("Temperature Device 0 Resolution: ");
+  Serial.print("Bottom Temperature sensor Resolution: ");
   Serial.print(_ds18b20.getResolution(_bottomThermometer), DEC);
   Serial.println();
 
-  Serial.print("Temperature Device 1 Resolution: ");
+  Serial.print("Top Temperature sensor Resolution: ");
   Serial.print(_ds18b20.getResolution(_topThermometer), DEC);
+  Serial.println();
+
+  Serial.print("Exterior Temperature sensor Resolution: ");
+  Serial.print(_ds18b20.getResolution(_exteriorThermometer), DEC);
   Serial.println();
 
   _frequencyTimer.setTimeout(_frequencySeconds * 1000);
@@ -96,18 +112,26 @@ boolean temperaturesensor_loop()
     _ds18b20.requestTemperatures();
     float tempC = _ds18b20.getTempC(_topThermometer);
     if (!_celsius) {
-      _topTempearture = DallasTemperature::toFahrenheit(tempC);
+      _topTemperature = DallasTemperature::toFahrenheit(tempC);
     }
     else {
-      _topTempearture = tempC;
+      _topTemperature = tempC;
     }
 
     tempC = _ds18b20.getTempC(_bottomThermometer);
     if (!_celsius) {
-      _bottomTempearture = DallasTemperature::toFahrenheit(tempC);
+      _bottomTemperature = DallasTemperature::toFahrenheit(tempC);
     }
     else {
-      _bottomTempearture = tempC;
+      _bottomTemperature = tempC;
+    }
+
+    tempC = _ds18b20.getTempC(_exteriorThermometer);
+    if (!_celsius) {
+      _exteriorTemperature = DallasTemperature::toFahrenheit(tempC);
+    }
+    else {
+      _exteriorTemperature = tempC;
     }
 
     _frequencyTimer.setTimeout(_frequencySeconds * 1000);

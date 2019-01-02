@@ -19,9 +19,13 @@ void setup()
 
     keezerwifi_setup(config, false);
 
-    mqtt_setup(config);
+    if (keezerwifi_saveConfig()) {
+      Serial.println("Going to save config");
+      jsonfile_save("/config.txt", config);
+      jsonfile_print("/config.txt");
+    }
 
-    jsonfile_save("/config.txt", config);
+    mqtt_setup(config);
 
   } else {
     Serial.println("failed to mount FS");
@@ -39,6 +43,11 @@ void loop()
 {
   // Connect to Wifi if not connected
   keezerwifi_loop(config);
+
+  if (keezerwifi_saveConfig()==true) {
+      jsonfile_save("/config.txt", config);
+      jsonfile_print("/config.txt");
+  }
 
   // Process all the loops
   mqtt_loop(config);
