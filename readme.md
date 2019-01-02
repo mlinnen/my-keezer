@@ -6,7 +6,7 @@ Master Branch [![Build Status](https://travis-ci.org/mlinnen/my-keezer.svg?branc
 Dev Branch [![Build Status](https://travis-ci.org/mlinnen/my-keezer.svg?branch=dev)](https://travis-ci.org/mlinnen/my-keezer)
 
 ## Goals 
-I have a number of goals I want to achieve for this custom controller.  At this point I doubt all of this could or should be done on a single ESP8266 micro.  It is likely I will have a number of ESP8266's that work together over MQTT to achieve all of the functionality I want.  This project will evolve over a long period of time.  The following is a list of goals which I hope to eventually turn into actual features.
+I have a number of goals I want to achieve for this custom controller.  At this point I doubt all of this could or should be done on a single ESP8266 micro.  It is likely I will have a number of ESP8266's that work together over MQTT to achieve all of the functionality I want.  This project will evolve over a long period of time.
 
 ### Future list of features
 Check out the [Github Issues (label enhancements)](https://github.com/mlinnen/my-keezer/labels/enhancement) for a list of features that are planned for a later date.
@@ -15,18 +15,23 @@ Check out the [Github Issues (label enhancements)](https://github.com/mlinnen/my
 This is a list of actual features the current code base supports.
 
 ### Current list of features
-* Measure the temperature inside the keezer with two temperature sensors (one at the top and one at the bottom)
-* Control the keezer temperature given a temperature set point and the temperature sensor reading ()
-* Display the current temperature of the keezer on an LCD
-* Turn on/off a fan(s) to circulate the air in the keezer
-* Detect motion when someone approaches the keezer
-* Turn on LED lighting when someone approaches and turn off the lighting after a delay
-* Broadcast over MQTT sensor readings such as: temperature and motion
-* Broadcast over MQTT event changes such as: compressor, fan and lights turning on/off
+* Measure the temperature inside the keezer with two temperature sensors (one at the top and one at the bottom).
+* Measure the temperature outside the keezer.
+* Control the keezer temperature given a temperature set point and the temperature sensor reading ().
+* Display the current temperature of the keezer on an LCD.
+* Turn on/off a fan(s) to circulate the air in the keezer when the difference between the top and bottom sensors is greater than a given threshold.  
+* Detect motion when someone approaches the keezer.
+* Turn on LED lighting and LCD display when someone approaches and turn off the lighting and LCD display after a delay.
+* Connects to MQTT broker using a user name and password.
+* Broadcast over MQTT sensor readings such as: temperature and motion.
+* Broadcast over MQTT event changes such as: compressor, fan and lights turning on/off.
 * Respond to an MQTT ping request so that an external application can determine what keezers are online.
+* Allow the keezer to join a wifi network without changing the code
+* Allow for the keezer to join a new Wifi or a different MQTT broker by holding down the mode pushbutton for > 3 seconds.
+* The keezer continues to maintain the temperature of the beer even if the Wifi is down or the MQTT broker is down.  The highest priority is to keep the beer nice and cold.
 
 ## Hardware
-* 2 DS18B20 Temperature Sensor
+* 3 DS18B20 Temperature Sensors
 * 1 4.7K Resistor
 * 1 [HUZZAH ESP8266](https://www.adafruit.com/product/2471)
 * 1 [4 Channel Relay Board](https://www.sunfounder.com/4-channel-5v-relay-shield-module.html)
@@ -37,13 +42,13 @@ This is a list of actual features the current code base supports.
 * 1 [LED Strip Light Triangle Bulbs](https://www.amazon.com/Triangle-Bulbs-T93003-Waterproof-Flexible/dp/B00IZA2URS)
 
 ## Wiring
-I used Fritzing to document the wiring of all components.  After installing Fritzing just open the doc\keezer.fzz file from Fritzing.
+I used Fritzing to document the wiring of all components.  After installing Fritzing just open the doc\keezer.fzz file from Fritzing.  Or you can look at the doc\Wiring.png file.
 
 ## I/O
 * 1 gpio for 1 wire for temperature sensors
 * 1 gpio for relay dc fan
 * 1 gpio for relay LED light strip
-* 1 gpio for SSR compressor
+* 1 gpio for relay compressor
 * 1 gpio for motion sensor
 * 2 gpio for LCD
 * 1 gpio for push button LCD mode
@@ -66,12 +71,20 @@ Set  43.0 Top 44.5
 Comp Off  Bot 42.5
 ```  
 
-Example Mode 2 Set Temperature
+Example Mode 2 External Temperature
+```
+Current Temperature
+          Ext 82.0
+        
+Comp Off          
+```
+
+Example Mode 3 Set Temperature
 ```
 Set Temperature
-Top 44.0
-Avg 43.0
-Bot 42.0
+High          44.0
+Avg           43.0
+Low           42.0
 ```
 
 ## Dependencies
@@ -80,22 +93,25 @@ This application depends on the following libraries:
 * DallasTemperature
 * RBD_Timer
 * RBD_Button
-* Adafruit_LiquidCrystal
-* Wifi
+* Adafruit LiquidCrystal
 * PubSubClient
+* WifiManager
+* ArduinoJson
 
 ## Build
 There are a couple things you need to do so that you can compile the project. I converted this project to use [Platform IO](https://platformio.org/) so you will need to install it as well as an editor. I personally think that the Visual Studio code editor works very well with Platform IO.
 
-1. Make a copy of the config.sample.h and rename it config.h
-2. Edit the config.h and set the variables you want to change in this file.
-3. Make a copy of the mywifi.sample.h and rename it mywifi.h
-4. Edit the mywifi.h and set the ssid and password to match your wifi.
-5. Make a copy of the mymqttbroker.sample.h and rename it mymqttbroker.h
-6. Edit the mymqttbroker.h and set the specifics for your MQTT broker and any topics you want to change.
-7. Place the ESP8266 into flash mode
-8. Run the following command 
+1. Make a copy of the myconfig.sample.h and rename it myconfig.h
+2. Edit the myconfig.h and set the specific topics that you want the keezer to use (or leave them as is).  If you have more than 1 keezer make sure you changed the integer in all the topics so that one keezer can be addressed differently than the other keezer
+3. You can also make changes to the default settings in myconfig.h
+4. TODO Detail how someone sets the right index values for the temperature sensors since they are different for every sensor.
+5. Place the ESP8266 into flash mode
+6. Run the following command 
         pio run --target upload
+7. The first time that the application is downloaded to the target platform it will put the device in an Access Point mode which will allow you to configure it for connection to your Wifi
+8. Open your Wifi and connect to "mykeezer-ap". Note you have 120 seconds after power on to complete this task before the keezer falls out of AP mode and starts controlling the temperature of the beer.  If you dont complete this process before the 120 second timeout simply cycle the power on the keezer and try again
+9. Click on the Wifi setup button and fill in the text fields.  Once the information is submitted the device will connect to Wifi and the MQTT broker
+10. If you need to change the MQTT or Wifi settings just hold in the mode button for longer than 4 seconds and the device will become an Access Point again for configuration.
 
 ## MQTT
 The only way to communicate with the keezer is to use MQTT messages.  Currently the integration is mostly one way (keezer publishing messages to MQTT), but at some point you will be able to control aspects of the keezer by sending messages to it.  If you have never used MQTT before then I would advise you to head on over to [MQTT.org](http://mqtt.org/) to learn more about it.
@@ -109,7 +125,7 @@ The Topics and Messages that the keezer uses will be defined here so that you ha
 The following subscriptions are supported by the keezer.
 
 #### Keezer ping
-This allows some external application to request what keezers are on the bus.  Each keezer will respond to this ping request.
+This allows some external application to request what keezers are on the bus.  Each keezer (if you have multiple) will respond to this ping request.
 ``` 
 /home/keezer/ping 
 ```
