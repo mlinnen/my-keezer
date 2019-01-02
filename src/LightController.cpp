@@ -8,6 +8,11 @@ boolean _publishMotion = false;
 boolean _lastMotion;
 boolean _lastLight;
 
+boolean lightcontroller_light()
+{
+    return _lastLight;
+}
+
 void lightcontroller_setup(int motionTimeOutSeconds, int lightOnSeconds)
 {
     pinMode(LIGHT_RELAY_PIN, OUTPUT);

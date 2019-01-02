@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include "temperatureSensor.h"
+#include "LightController.h"
 #include "keezerLCD.h"
 #include <RBD_Button.h>
 #include <RBD_Timer.h>

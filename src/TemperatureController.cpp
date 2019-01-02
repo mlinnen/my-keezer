@@ -88,7 +88,7 @@ boolean temperaturecontroller_loop(float fanTemperatureLow, float fanTemperature
     }
   }
 
-  // This is the service loop that is called from the main program and will update the state of this component.
+  // Check if a new set of temp readings exist
   if (temperaturesensor_loop() == true)
   {
 
@@ -129,6 +129,14 @@ boolean temperaturecontroller_loop(float fanTemperatureLow, float fanTemperature
     _lastFan = _fan;
 
     refreshLCD = true;
+  }
+  
+  // if the keezer lights are on then turn on the LCD
+  if (lightcontroller_light()) {
+    keezerlcd_on();
+  }
+  else {
+    keezerlcd_off();
   }
 
   if (_publishTempTimer.isExpired())

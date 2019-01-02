@@ -21,7 +21,7 @@ This is a list of actual features the current code base supports.
 * Display the current temperature of the keezer on an LCD
 * Turn on/off a fan(s) to circulate the air in the keezer when the difference between the top and bottom sensors is greater than a given threshold.  
 * Detect motion when someone approaches the keezer
-* Turn on LED lighting when someone approaches and turn off the lighting after a delay
+* Turn on LED lighting and LCD display when someone approaches and turn off the lighting and LED display after a delay
 * Connects to MQTT broker using a user name and password
 * Broadcast over MQTT sensor readings such as: temperature and motion
 * Broadcast over MQTT event changes such as: compressor, fan and lights turning on/off

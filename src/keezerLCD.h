@@ -11,5 +11,7 @@ void keezerlcd_setup();
 void keezerlcd_print();
 void keezerlcd_printText(int mode);
 void keezerlcd_printVariables(int mode);
+void keezerlcd_on();
+void keezerlcd_off();
 
 #endif
